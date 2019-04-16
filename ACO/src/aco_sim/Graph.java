@@ -1,13 +1,13 @@
-package projectoPOO;
+package aco_sim;
 
-abstract class Graph {
+public abstract class Graph {
 	//attributes
-	int nbnodes;
-	int nestnode;
-	Node[] nodes;
+	public int nbnodes;
+	public int nestnode;
+	public Node[] nodes;
 	
 	//constructor
-	Graph(int nbnodes, int nestnode, double[][] weights){
+	public Graph(int nbnodes, int nestnode, double[][] weights){
 		//initialize attributes
 		this.nbnodes = nbnodes;
 		this.nestnode = nestnode;
@@ -17,8 +17,9 @@ abstract class Graph {
 			nodes[i] = new Node(i);
 		}
 		for(int i=0; i<nbnodes; i++)
-			for(int j=0; j<nbnodes; j++) {
-				nodes[i].setEdge(nodes[j],weights[i][j]);
+			for(int j=i; j<nbnodes; j++) {
+				if(weights[i][j]!=0)
+					nodes[i].setEdge(nodes[j],weights[i][j]);
 			}
 
 	}

@@ -1,4 +1,4 @@
-package projectoPOO;
+package aco_sim;
 import java.util.*;
 
 public class Node {
@@ -14,5 +14,11 @@ public class Node {
 	}
 	void setEdge(Node node2, double weight) {
 		edges.add(new Edge(this, node2, weight));
+	}
+	
+	public void print() {
+		System.out.println("id: " + nodeidx);
+		for(int i=0; i<edges.size(); i++)
+			edges.get(i).print();
 	}
 }
