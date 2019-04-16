@@ -19,12 +19,15 @@ public class Edge {
 	void setWeight(double value) {
 		weight = value;
 	}
+	
 	double getWeight() {
 		return weight;
 	}
+	
 	void setPheromone(double value) {
 		pheromone = value;
 	}
+	
 	double getPheromone() {
 		return pheromone;
 	}
