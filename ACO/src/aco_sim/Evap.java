@@ -1,11 +1,9 @@
 package aco_sim;
 
-public class Evap implements Event {
+public class Evap extends Event {
 
-	private final double eta;
-	private final double rho;
-	double timestamp = 0;
-	
+	private double eta;
+	private double rho;
 	
 	public Evap(double Eta, double Rho) {
 		// TODO Auto-generated constructor stub
@@ -17,12 +15,4 @@ public class Evap implements Event {
 		
 	}
 	
-	public void Settimestamp(double m) {
-		timestamp = m;
-	}
-	
-	public double Gettimestamp() {
-		return timestamp;
-	}
-
 }
