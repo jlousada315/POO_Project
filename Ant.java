@@ -19,13 +19,13 @@ public class Ant{
 		return path;
 	}
 	
-	//flag that is 1 if there is a duplicate, 2 if hamiltonian cycle is complete and 0 o.w.
-	private int duplicate(Node X) {
+	//flag: 1 if there is a duplicate, 2 if hamiltonian cycle is complete and 0 o.w.
+	int duplicate(Node X) {
 		for(int i = 0; i < path.size(); ++i) {
 			if(X == path.get(i) && path.size()!=G.nbnodes) {return 1;}
 		}
-			if(path.size()==G.nbnodes && X==G.getNest()){return 2;}
-			else {return 0;}
+		if(path.size()==G.nbnodes && X==G.getNest()){return 2;}
+		else return 0;
 	}
 		
 	public void updatePath(Move m) {
@@ -46,14 +46,4 @@ public class Ant{
 		}
 		
 	}
-	/*
-	public boolean isHamiltonian(int n) {
-		int k1=0;
-		int k2=0;
-		for(int i=0; i<n; i++) {
-			k1+=i;
-			k2+=path.get(i).nodeidx;
-		}
-		return k1==k2;
-	}*/
 }

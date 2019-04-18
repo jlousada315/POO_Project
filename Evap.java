@@ -20,9 +20,9 @@ public class Evap extends Event{
 		p.addEvPEC(ev);
 	}
 	
-	public void updatePheromones(boolean isHamiltonian, Ant A) {
+	public void updatePheromones(Ant A) {
 		//if cycle is Hamiltonian, increase level of pheromones on the path
-		if(isHamiltonian) {
+		if(A.duplicate(A.path.get(0))==2) {
 			double pathW = 0;
 			for(int i=0; i<A.path.size()-1; i++) {
 				pathW += A.path.get(i).getEdgeWeight(A.path.get(i+1));
