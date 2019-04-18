@@ -32,13 +32,16 @@ public class Edge {
 		return pheromone;
 	}
 	
-	//methods
+	Node getNode2() {
+		return node2;
+	}
 	
+	//methods
 	
 	//other methods
 	void print() {
-		System.out.print(" 1: " + node1.nodeidx);
-		System.out.print(" 2: " + node2.nodeidx);
+		System.out.print(" Node 1: " + node1.nodeidx);
+		System.out.print(" Node 2: " + node2.nodeidx);
 		System.out.print(" w: " + weight);
 		System.out.print(" p: " + pheromone);
 		System.out.println();

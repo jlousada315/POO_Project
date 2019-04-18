@@ -28,8 +28,6 @@ public class Node {
 	
 	//methods
 	
-	
-	
 	//other methods
 	public void print() {
 		System.out.println("id: " + nodeidx);

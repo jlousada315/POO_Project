@@ -1,9 +1,17 @@
 package aco_sim;
 
-public class Event {
-
-	public Event() {
-		// TODO Auto-generated constructor stub
+public abstract class Event {
+	
+	public double timestamp=0;
+	
+	abstract void simulate();
+	
+	void setTimeStamp(double m) {
+		timestamp = m ;
 	}
-
+	
+	double getTimeStamp() {
+		return timestamp;
+	}
+	
 }
