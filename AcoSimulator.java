@@ -13,6 +13,8 @@ public class AcoSimulator {
 		// TODO Auto-generated constructor stub
 		G = new Graph(n, n1, aij);
 		ants = new Ant[miu];
+		for(int i=0; i<miu; i++) 
+			ants[i] = new Ant(G);
 		pec = new PEC();
 		par = new double[]{alpha, beta, delta, eta, rho, gamma, tau};
 		this.run();

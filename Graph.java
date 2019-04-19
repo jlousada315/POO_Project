@@ -26,12 +26,8 @@ public class Graph {
 				}
 			}
 	}
-	
-	//sets and gets
-	public int getNestnb() {
-		return nestnode;
-	}
-	
+
+	//methods
 	public Node getNest() {
 		//gets nest node
 		if(nodes[nestnode-1] != null ) {

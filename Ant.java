@@ -15,10 +15,6 @@ public class Ant{
 		this.G = G;
 	}
 	
-	LinkedList<Node> getPath(){
-		return path;
-	}
-	
 	//flag: 1 if there is a duplicate, 2 if hamiltonian cycle is complete and 0 o.w.
 	int duplicate(Node X) {
 		for(int i = 0; i < path.size(); ++i) {

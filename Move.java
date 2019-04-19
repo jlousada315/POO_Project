@@ -29,7 +29,7 @@ public class Move extends Event{
 	
 	public LinkedList<Node> nextNode(Ant A) {
 		
-		LinkedList<Node> path = A.getPath();
+		LinkedList<Node> path = A.path;
 		Node Current = path.get(path.size()-1);
 		LinkedList<Node> Adj = new LinkedList<Node>();
 		LinkedList<Node> HighProb = new LinkedList<Node>();
