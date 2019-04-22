@@ -2,6 +2,7 @@ package aco_sim;
 
 public class Graph {
 	//attributes
+	int totalW = 0; //total weight of graph
 	public int nbnodes;
 	public int nestnode;
 	public Node[] nodes;
@@ -21,6 +22,7 @@ public class Graph {
 				if(weights[i][j]!=0) {
 					nodes[i].setEdge(nodes[j],weights[i][j]);
 					nodes[j].setEdge(nodes[i],weights[i][j]);
+					totalW += weights[i][j];
 				}
 			}
 	

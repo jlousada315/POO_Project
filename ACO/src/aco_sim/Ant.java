@@ -19,7 +19,7 @@ public class Ant{
 	}
 	
 	//flag that is 1 if there is a duplicate, 2 if hamiltonian cycle is complete and 0 o.w.
-	private int duplicate(Node X) {
+	int duplicate(Node X) {
 		for(int i = 0; i < path.size(); ++i) {
 			if(X == path.get(i) && path.size()!=G.nbnodes) {return 1;}
 		}

@@ -6,12 +6,5 @@ public abstract class Event {
 	
 	abstract void simulate(PEC p,Event ev);
 	
-	void setTimeStamp(double m) {
-		timestamp = m ;
-	}
-	
-	double getTimeStamp() {
-		return timestamp;
-	}
-	
+
 }

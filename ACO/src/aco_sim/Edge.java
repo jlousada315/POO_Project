@@ -1,5 +1,7 @@
 package aco_sim;
 
+import java.util.Objects;
+
 public class Edge {
 	//attributes
 	Node node1;
@@ -37,6 +39,20 @@ public class Edge {
 	}
 	
 	//methods
+		@Override 
+		public int hashCode() {
+			return Objects.hash(node1, node2, weight);
+		}
+			
+		@Override
+		public boolean equals(Object obj) {
+		    if (obj == null) return false;
+	        if (!(obj instanceof Edge)) return false;
+	        Edge newEdge = (Edge) obj;
+	        return (this.node1.equals(newEdge.node1)
+	        		&& this.node2.equals(newEdge.node2));
+		}
+		
 	
 	//other methods
 	void print() {
