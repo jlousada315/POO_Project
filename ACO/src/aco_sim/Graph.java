@@ -18,14 +18,13 @@ public class Graph {
 			nodes[i] = new Node(i+1);
 		}
 		for(int i=0; i<nbnodes; i++)
-			for(int j=i; j<nbnodes; j++) {
+			for(int j=i+1; j<nbnodes; j++) {
 				if(weights[i][j]!=0) {
 					nodes[i].setEdge(nodes[j],weights[i][j]);
 					nodes[j].setEdge(nodes[i],weights[i][j]);
 					totalW += weights[i][j];
 				}
 			}
-	
 	}
 	
 	//returns node

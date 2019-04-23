@@ -16,9 +16,10 @@ public class TsfSimulator {
 		double delta = 1;
 		double rho = 1;
 		double eta = 1;
+		double gamma = 1;
 		
 		int nbnodes = 5;
-		int nestnode = 4;
+		int nestnode = 1;
 		
 		double[][] weight = new double[nbnodes][5];
 		
@@ -49,17 +50,20 @@ public class TsfSimulator {
 		Nest.print();
 		
 		Move m = new Move(alpha, beta, delta, plevel);
+		Evap e = new Evap(eta,rho,gamma);
 		//Create ant starting in nest
 		Ant A = new Ant(G);
 		
-		//test if next node is correct
-		LinkedList<Node> next = m.nextNode(A);
-		for(int i = 0 ; i < next.size();++i) {
-			next.get(i).print();
-		}
+		LinkedList<Node> N = m.nextNode(A);
 		
-		//
+		/*for(int i = 0; i< N.size();++i) {
+			N.get(i).print();
+		}*/
 		
+		//A.resetPath();
+		A.updatePath(m, e);
+	
+		System.out.println(A.toString());
 	}
 
 }

@@ -1,5 +1,8 @@
 package aco_sim;
 
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.LinkedList;
 
 public class Move extends Event{
@@ -27,17 +30,23 @@ public class Move extends Event{
 		p.addEvPEC(ev);
 	}
 	
+	//Calculates the following node
 public LinkedList<Node> nextNode(Ant A) {
 		
 		LinkedList<Node> path = A.getPath();
 		Node Current = path.get(path.size()-1);
 		LinkedList<Node> Adj = new LinkedList<Node>();
-		LinkedList<Node> HighProb = new LinkedList<Node>();
+		LinkedList<Node> NodeOrdered = new LinkedList<Node>();
 		
-		int index = 0;
 		double ci = 1;
 		double w[] = new double[Current.edges.size()];
 		double cij[] = new double[w.length];
+		Double probability[] = new Double[w.length];
+		
+		Integer index[] = new Integer[w.length];
+		for (int i = 0; i < index.length; i++) {
+		    index[i] = i;
+		}
 		
 		//Array with each edge with weight and Adjacent list of Nodes 
 		for(int i = 0; i < Current.edges.size();++i) {
@@ -54,17 +63,24 @@ public LinkedList<Node> nextNode(Ant A) {
 			cij[k] = (alpha + plevel)/(beta + w[k]); 	 
 		}
 		
-		//The event(s) with the highest probability is selected
-		for(int k=0; k < w.length-1 ; ++k) {
-			if(cij[k+1]/ci >= cij[k]/ci) {
-				index = k+1;
-			}
+		//Probabilities are stored in array.
+		for(int k=0; k < w.length ; ++k) {
+			probability[k] = cij[k]/ci; 
 		}
-
-		HighProb.add(Adj.get(index));
 		
-		//returns Node with highest probability of tranversing
-		return HighProb;
+		Arrays.sort(index, Collections.reverseOrder(new Comparator<Integer>() {
+
+		    public int compare(Integer i1, Integer i2) {
+		        return probability[i1].compareTo(probability[i2]);
+		    }
+		}));
+		
+		for(int i = 0; i < index.length; ++i) {
+			NodeOrdered.add(Adj.get(index[i]));
+		}
+		
+		//returns List of Nodes ordered from highest probability of tranversing to lowest
+		return NodeOrdered;
 	}
 	
 }
