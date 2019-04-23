@@ -2,10 +2,20 @@ package main;
 
 import aco_sim.*;
 
+import java.io.IOException;
+import java.util.LinkedList;
+
+import javax.xml.parsers.ParserConfigurationException;
+
 public class TsfSimulator {
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws Exception {
 		// TODO Auto-generated method stub
+		
+		/*Loading and validating XML file*/
+		boolean vali = XMLUltils.validateWithDTDUsingDOM("D:\\tecnico\\POO\\data1.xml");
+		System.out.println(vali);
+		
 		/*Fields*/
 		int finalinst = 300;
 		double plevel = 0.5;
@@ -17,7 +27,7 @@ public class TsfSimulator {
 		double eta = 1;
 		
 		int nbnodes = 5;
-		int nestnode = 1;
+		int nestnode = 4;
 		
 		double[][] weight = new double[nbnodes][5];
 		
@@ -49,8 +59,17 @@ public class TsfSimulator {
 		
 		Move m = new Move(alpha, beta, delta, plevel);
 		//Create ant starting in nest
-		Ant A = new Ant(G,m);
-		A.updatePath();
+		Ant A = new Ant(G);
+		
+		//test if next node is correct
+		LinkedList<Node> next = m.nextNode(A);
+		for(int i = 0 ; i < next.size();++i) {
+			next.get(i).print();
+		}
+		next = m.nextNode(A);
+		for(int i = 0 ; i < next.size();++i) {
+			next.get(i).print();
+		}
 		
 	}
 
