@@ -2,64 +2,86 @@ package aco_sim;
 
 import java.util.*;
 
-
 public class Ant{
 	//attributes
 	LinkedList<Node> path;
-	Move m;
 	Graph G;
+	double gamma;
 	
-	//constructor
-	public Ant(Graph G, Move m) {
+	public Ant(Graph G, double gamma) {
 		// TODO Auto-generated constructor stub
 		path = new LinkedList<Node>();
 		path.add(G.getNest());
-		this.m = m;
 		this.G = G;
+		this.gamma = gamma;
 	}
-
-	//methods
-	public int tranverseProb() {
-		
-		Node Current = path.get(path.size()-1);
-		double probability = 0;
-		int index = 0;
-		double ci = 1;
-		double w[] = new double[Current.edges.size()];
-		double cij[] = new double[w.length];
-		
-		for(int i = 0; i < Current.edges.size();++i) {
-			w[i] = Current.edges.get(i).weight;
+	
+	LinkedList<Node> getPath(){
+		return path;
+	}
+	
+	//flag that is 1 if there is a duplicate, 2 if hamiltonian cycle is complete and 0 o.w.
+	int duplicate(Node X) {
+		for(int i = 0; i < path.size(); ++i) {
+			if(X == path.get(i) && path.size()!=G.nbnodes) {return 1;}
+		}
+		if(path.size()==G.nbnodes && X==G.getNest()){return 2;}
+		else {return 0;}
+	}
+	
+	public void printPath() {
+		for(int i=0 ;i < path.size(); ++i ) {
+			path.get(i).print();
+		}
+	}
+	
+	public String toString() {
+		int arr[] = new int[path.size()];
+		for(int i=0 ;i < path.size(); ++i ) {
+			arr[i] = path.get(i).nodeidx;
+		}
+	 return Arrays.toString(arr);
+	}
+	
+	//resets path to Node to find another Hamiltonian cycle
+	public void resetPath() {
+		path.clear();
+		path.add(G.getNest());
+	}
+	
+	//Update's Ant's path according to rules.
+	public void updatePath(Move m, Evap e) {
+		LinkedList<Node> aux = new LinkedList<Node>();
+		Prob uniform = new Prob();
 			
+		int i = 0;
+		while(i < 40) {
+			aux = m.nextNode(this);
+			for(int k = 0; k < aux.size(); ++k) {
+				if(duplicate(aux.get(k)) == 0){
+					path.add(aux.get(k));
+					break;
+				}
+			}
+			for(int k = 0; k < aux.size(); ++k) {
+				if(duplicate(aux.get(k)) == 2){		
+					updatePheromones();
+					System.out.println("Hamiltonian Cycle Found with path = " + toString());
+					resetPath();
+				}
+			}
+			++i;	
 		}
-		
-		for(int k=0; k < w.length ; ++k) {
-			ci += (m.alpha + m.plevel)/(m.beta + w[k]); 
-		}
-		
-		for(int k=0; k < w.length ; ++k) {
-			cij[k] = (m.alpha + m.plevel)/(m.beta + w[k]); 
-			if(cij[k]/ci > probability) {
-				probability = cij[k]/ci;
-				index = k;
-				} 
-		}
-	
-		return index;
-		//wrong code : must return node correspondent to that edge . 
 	}
 	
-	public void updatePath() {
-		;
-	}
-	
-	public boolean isHamiltonian(int n) {
-		int k1=0;
-		int k2=0;
-		for(int i=0; i<n; i++) {
-			k1+=i;
-			k2+=path.get(i).nodeidx;
+	//if cycle is Hamiltonian, increase level of pheromones on the path
+	public void updatePheromones() {
+		double pathW = 0;
+		for(int i=0; i<path.size()-1; i++) {
+			pathW += path.get(i).getEdgeWeight(path.get(i+1));
 		}
-		return k1==k2;
+		double updateValue = gamma*G.totalW/pathW;
+		for(int i=0; i<path.size()-1; i++) 
+			path.get(i).getEdge(path.get(i+1)).pheromone += updateValue;
 	}
 }

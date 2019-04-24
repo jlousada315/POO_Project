@@ -1,25 +1,36 @@
 package aco_sim;
 
-public class Evap extends Event{
+public class Evap extends Event {
+	//attributes
+	final double eta;
+	final double rho;
 	
-	private double eta;
-	private double rho;
-	
-	public Evap(double eta, double rho) {
-		// TODO Auto-generated constructor stub
+	//constructor
+	public Evap(Object obj, double eta, double rho) {
+		super(obj, Prob.expRand(eta));
+		this.obj = obj;
 		this.eta = eta;
 		this.rho = rho;
 	}
-
-	public void simulate() {
-		
+	
+	@Override
+	void simulate(PEC pec) {
+		//executes current event
+		evapFromEdge((Edge)obj);
+		//creates next event
+		pec.addEvPEC(newEvap());
 	}
 	
-	public void setTimeStamp(double m) {
-		timestamp = m;
+	//evaporates pheromones by rho
+	void evapFromEdge(Edge edge) {
+		if(edge.pheromone>rho)
+			edge.pheromone -= rho;
+		else
+			edge.pheromone = 0;
 	}
 	
-	public double getTimeStamp() {
-		return timestamp;
+	//creates next event
+	Evap newEvap() {
+		return new Evap(obj, eta, rho);
 	}
 }

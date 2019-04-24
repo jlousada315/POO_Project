@@ -1,16 +1,13 @@
 package aco_sim;
 
 import java.util.LinkedList;
-import aco_sim.Event;
 
 public class PEC {
-	
-	/*Fields*/
+	//attributes
 	LinkedList<Event> E;
 	
-	//Constructor create empty list of events	
-	public PEC() {
-		// TODO Auto-generated constructor stub
+	//constructor
+	PEC() {
 		E =  new LinkedList<Event>();
 	}
 	
@@ -26,5 +23,4 @@ public class PEC {
 		E.removeFirst();
 		return first;
 	}
-
 }
