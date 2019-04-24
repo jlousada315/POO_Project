@@ -1,4 +1,6 @@
 package aco_sim;
+import graph.*;
+import pec.*;
 
 public class AcoSimulator {
 	//attributes
@@ -25,7 +27,7 @@ public class AcoSimulator {
 		//initialize events
 		initEvents();
 		//get initial event
-		Event currentEvent = pec.E.get(0);
+		Event currentEvent = pec.nextEvPEC();
 		double currentTime = currentEvent.timestamp;
 		//run while current time lower than tau
 		while(currentTime < this.par[6]) {
@@ -37,7 +39,7 @@ public class AcoSimulator {
 	
 	//initialize events
 	void initEvents() {
-		;
+		/*init moves*/;
 	}
 	
 	//other methods
