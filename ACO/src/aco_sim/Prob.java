@@ -16,4 +16,9 @@ public class Prob {
 		double next = rand.nextDouble();
 		return -m*Math.log(1.0-next);
 	}		
+	
+	public int uniformDist(int max) {
+		int next = rand.nextInt(max);
+		return next;
+	}
 }

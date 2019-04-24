@@ -1,6 +1,7 @@
 package main;
 
 import aco_sim.*;
+import java.util.LinkedList;
 
 public class TsfSimulator {
 
@@ -15,6 +16,8 @@ public class TsfSimulator {
 		double delta = 1;
 		double rho = 1;
 		double eta = 1;
+		double gamma = 1;
+		double timestamp = 0;
 		
 		int nbnodes = 5;
 		int nestnode = 1;
@@ -44,13 +47,22 @@ public class TsfSimulator {
 		
 		Graph G = new Graph(nbnodes, nestnode, weight);
 		
-		Node Nest = G.getNest();
-		Nest.print();
-		
-		Move m = new Move(alpha, beta, delta, plevel);
+		Move m = new Move(alpha, beta, delta, plevel,timestamp);
+		Evap e = new Evap(eta,rho,gamma);
 		//Create ant starting in nest
-		Ant A = new Ant(G,m);
-		A.updatePath();
+		Ant A = new Ant(G);
+		
+		LinkedList<Node> N = m.nextNode(A);
+		
+		/*for(int i = 0; i< N.size();++i) {
+			N.get(i).print();
+		}*/
+		
+		A.resetPath();
+		A.updatePath(m, e);
+		A.updatePath(m, e);
+		A.updatePath(m, e);
+		A.updatePath(m, e);
 		
 	}
 

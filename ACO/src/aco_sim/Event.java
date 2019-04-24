@@ -1,17 +1,16 @@
 package aco_sim;
 
 public abstract class Event {
-	
+	//attributes
 	public double timestamp=0;
+	Object obj;
 	
-	abstract void simulate();
-	
-	void setTimeStamp(double m) {
-		timestamp = m ;
+	//constructor
+	Event(Object obj, double timestamp){
+		this.obj = obj;
+		this.timestamp = timestamp;
 	}
 	
-	double getTimeStamp() {
-		return timestamp;
-	}
-	
+	//abstract methods
+	abstract void simulate(PEC pec);
 }
