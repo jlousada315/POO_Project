@@ -7,44 +7,39 @@ public class TsfSimulator {
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
-		/*Fields*/
-		int finalinst = 300;
-		double plevel = 0.5;
-		int antcolsize = 200; 
-		double alpha = 1;
-		double beta = 1;
-		double delta = 1;
-		double rho = 1;
-		double eta = 1;
-		double gamma = 1;
-		double timestamp = 0;
 		
-		int nbnodes = 5;
-		int nestnode = 1;
-		
-		double[][] weight = new double[nbnodes][5];
-		
-		//Filling weight with zeros 
+		/*Loading and validation of XML file*/
+		boolean vali = XMLUltils.validateWithDTDUsingDOM(args[0]);
+		System.out.println(vali);
+	
+		/*Initialization*/
+		double finalinst = XMLUltils.getFinalinst();
+		System.out.println("finalinst = " + finalinst);
+		int antcolsize = XMLUltils.getAntCol(); 
+		System.out.println("antcolsize = " + antcolsize);
+		double plevel = XMLUltils.getPLevel();
+		System.out.println("plevel = " + plevel);
+		int nbnodes = XMLUltils.getNbNodes();
+		System.out.println("nbnodes = " + nbnodes);
+		int nestnode = XMLUltils.getNestNode();
+		System.out.println("nestnode = " + nestnode);
+		double aux[] = XMLUltils.getGreek();
+		double alpha = aux[0];
+		System.out.println("alpha = " + alpha);
+		double beta = aux[1];
+		System.out.println("beta = " + beta);
+		double delta = aux[2];
+		System.out.println("delta = " + delta);
+		double eta = aux[3];
+		System.out.println("eta = " + eta);
+		double rho = aux[4];
+		System.out.println("rho = " + rho);
+		double[][] weight = XMLUltils.getWeights(); 
 		for(int i=0; i< nbnodes; i++) {
-		    for(int j=0; j< 5; j++) {
-		        weight[i][j] = 0;
-		    }
+		    System.out.println( weight[i][0] +" "+ weight[i][1] +" "+ weight[i][2] +" "+ weight[i][3] +" "+ weight[i][4] );
 		}
 		
-		//1st Node
-		weight[0][1] = 3;
-		weight[0][2] = 6;
-		weight[0][3] = 6;
-		weight[0][4] = 2;
-		
-		//2nd Node
-		weight[1][2] = 3;
-		weight[1][3] = 2;
-		weight[1][4] = 5;
-		
-		//4th Node
-		weight[3][4] = 1;
-		
+		/*Simulation*/
 		Graph G = new Graph(nbnodes, nestnode, weight);
 		
 		Move m = new Move(alpha, beta, delta, plevel,timestamp);
