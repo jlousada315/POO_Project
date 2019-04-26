@@ -3,7 +3,7 @@ package aco_tools;
 import java.util.Comparator;
 import java.util.Map;
 
-class ValueComparator implements Comparator<Integer> {
+public class ValueComparator implements Comparator<Integer> {
 	Map<Integer, Double> base;
 
 	public ValueComparator(Map<Integer, Double> base) {
