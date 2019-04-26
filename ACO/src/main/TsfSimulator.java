@@ -1,76 +1,72 @@
 package main;
 
-import aco_sim.*;
+//import aco_sim.*;
+import xml_utils.XMLUtils;
 
 import java.io.IOException;
-import java.util.LinkedList;
 
 import javax.xml.parsers.ParserConfigurationException;
 
 public class TsfSimulator {
-
-	public static void main(String[] args) throws Exception {
-		// TODO Auto-generated method stub
+	public static void main(String[] args)  {
 		
-		/*Loading and validating XML file*/
-		boolean vali = XMLUltils.validateWithDTDUsingDOM("D:\\tecnico\\POO\\data1.xml");
+		/*Loading and validation of XML file*/
+		boolean vali = true;
+		try {
+			vali = XMLUtils.validateWithDTDUsingDOM(args[0]);
+		} catch (ParserConfigurationException | IOException e) {
+			e.printStackTrace();
+			System.exit(-1);
+		}
 		System.out.println(vali);
-		
-		/*Fields*/
-		int finalinst = 300;
-		double plevel = 0.5;
-		int antcolsize = 200; 
-		double alpha = 1;
-		double beta = 1;
-		double delta = 1;
-		double rho = 1;
-		double eta = 1;
-		
-		int nbnodes = 5;
-		int nestnode = 4;
-		
-		double[][] weight = new double[nbnodes][5];
-		
-		//Filling weight with zeros 
+	
+		/*Initialization*/
+		double aux[] = XMLUtils.getDouble();
+		double finalinst = aux[0];
+		System.out.println("finalinst = " + finalinst);
+		double plevel = aux[1];
+		System.out.println("plevel = " + plevel);
+		double alpha = aux[2];
+		System.out.println("alpha = " + alpha);
+		double beta = aux[3];
+		System.out.println("beta = " + beta);
+		double delta = aux[4];
+		System.out.println("delta = " + delta);
+		double eta = aux[5];
+		System.out.println("eta = " + eta);
+		double rho = aux[6];
+		System.out.println("rho = " + rho);
+		int aux1[] = XMLUtils.getInt();
+		int antcolsize = aux1[0]; 
+		System.out.println("antcolsize = " + antcolsize);
+		int nbnodes = aux1[1];
+		System.out.println("nbnodes = " + nbnodes);
+		int nestnode = aux1[2];
+		System.out.println("nestnode = " + nestnode);
+		double[][] weight = XMLUtils.getWeights(); 
 		for(int i=0; i< nbnodes; i++) {
-		    for(int j=0; j< 5; j++) {
-		        weight[i][j] = 0;
-		    }
+		    System.out.println( weight[i][0] +" "+ weight[i][1] +" "+ weight[i][2] +" "+ weight[i][3] +" "+ weight[i][4] );
 		}
 		
-		//1st Node
-		weight[0][1] = 3;
-		weight[0][2] = 6;
-		weight[0][3] = 6;
-		weight[0][4] = 2;
+		/*Simulation*/
+		/*Graph G = new Graph(nbnodes, nestnode, weight);
 		
-		//2nd Node
-		weight[1][2] = 3;
-		weight[1][3] = 2;
-		weight[1][4] = 5;
-		
-		//4th Node
-		weight[3][4] = 1;
-		
-		Graph G = new Graph(nbnodes, nestnode, weight);
-		
-		Node Nest = G.getNest();
-		Nest.print();
-		
-		Move m = new Move(alpha, beta, delta, plevel);
+		Move m = new Move(alpha, beta, delta, plevel,timestamp);
+		Evap e = new Evap(eta,rho,gamma);
 		//Create ant starting in nest
 		Ant A = new Ant(G);
 		
-		//test if next node is correct
-		LinkedList<Node> next = m.nextNode(A);
-		for(int i = 0 ; i < next.size();++i) {
-			next.get(i).print();
-		}
-		next = m.nextNode(A);
-		for(int i = 0 ; i < next.size();++i) {
-			next.get(i).print();
-		}
+		LinkedList<Node> N = m.nextNode(A);
 		
+		/*for(int i = 0; i< N.size();++i) {
+			N.get(i).print();
+		}*/
+		/*
+		A.resetPath();
+		A.updatePath(m, e);
+		A.updatePath(m, e);
+		A.updatePath(m, e);
+		A.updatePath(m, e);
+		*/
 	}
-
 }
