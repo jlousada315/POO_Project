@@ -1,17 +1,17 @@
 package aco_sim;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.LinkedList;
+import pec.*;
+import aco_tools.*;
 
-public class Move extends Event {
+import java.util.*;
+
+public class Move extends Event{
 	//attributes
 	final double alpha;
 	final double beta;
 	final double delta;
 	final double plevel;
-	
+
 	//constructor
 	public Move(Object obj, double timestamp, double alpha, double beta, double delta, double plevel) {
 		super(obj, timestamp);
@@ -20,69 +20,97 @@ public class Move extends Event {
 		this.delta = delta;
 		this.plevel = plevel;
 	}
-	
+
+	//simulate this event
 	@Override
-	void simulate(PEC pec) {
-		// simulate method
-		this.nextNode((Ant)obj);
+	public void simulate(PEC pec) {
 		// create next event
-		pec.addEvPEC(newMove());
+		pec.addEvPEC(newMove());		
 	}
-	
-	//Calculates the following node
-	public LinkedList<Node> nextNode(Ant A) {
-		
-		LinkedList<Node> path = A.getPath();
-		Node Current = path.get(path.size()-1);
-		LinkedList<Node> Adj = new LinkedList<Node>();
-		LinkedList<Node> NodeOrdered = new LinkedList<Node>();
-		
-		double ci = 1;
-		double w[] = new double[Current.edges.size()];
-		double cij[] = new double[w.length];
-		Double probability[] = new Double[w.length];
-		
-		Integer index[] = new Integer[w.length];
-		for (int i = 0; i < index.length; i++) {
-		    index[i] = i;
-		}
-		
+
+	//calculateProb
+	private Double[] calculateProb() {		
+		AcoNode Current = ((Ant)obj).path.get(((Ant)obj).path.size()-1); // Current Node
+		LinkedList<AcoNode> Adj = new LinkedList<AcoNode>();  //List of Adjacent Nodes of Current Node
+		double ci = 0;	//Normalization Constant
+		double w[] = new double[Current.getEdgesSize()]; //Array of weights
+		double cij[] = new double[w.length]; //Proportional to Probability
+		Double probability[] = new Double[w.length]; //probability of tranversing
+
 		//Array with each edge with weight and Adjacent list of Nodes 
-		for(int i = 0; i < Current.edges.size();++i) {
-			w[i] = Current.edges.get(i).weight;
-			Adj.add(Current.edges.get(i).node2);
+		for(int i = 0; i < Current.getEdgesSize();++i) {
+			w[i] = ((AcoEdge)Current.getEdge(i)).getWeight();
+			Adj.add((AcoNode)Current.getEdge(i).getNode2());
 		}
-		
+
 		//Probability Calculation
 		for(int k=0; k < w.length ; ++k) {
-			ci += (alpha + plevel)/(beta + w[k]); 
-		}
-		
-		for(int k=0; k < w.length ; ++k) {
 			cij[k] = (alpha + plevel)/(beta + w[k]); 	 
-		}
-		
+			ci += (alpha + plevel)/(beta + w[k]); 
+		}	
+
 		//Probabilities are stored in array.
+		Prob uniform = new Prob();
 		for(int k=0; k < w.length ; ++k) {
-			probability[k] = cij[k]/ci; 
+			probability[k] = (uniform.uniformDist(100))*cij[k]/ci; 
 		}
+
+		return probability;
+	}
+
+	//calculates the following node
+	public int nextNode() {
+		AcoNode Current = ((Ant)obj).path.get(((Ant)obj).path.size()-1); // Current Node
+		LinkedList<AcoNode> Adj = new LinkedList<AcoNode>();  //List of Adjacent Nodes of Current Node		
+		int nbedges = Current.getEdgesSize(); //number of edges adjacent to current node
+		Integer adjindex[] = new Integer[nbedges];  
+		Object index[] = new Object[nbedges];
 		
-		Arrays.sort(index, Collections.reverseOrder(new Comparator<Integer>() {
-		    public int compare(Integer i1, Integer i2) {
-		        return probability[i1].compareTo(probability[i2]);
-		    }
-		}));
+		Double[] probability = calculateProb(); // array of the probability of tranversing to next node
+
+		//Fills List Adj with adjacent nodes 
+		for(int i = 0 ; i < nbedges ; ++i) {
+			Adj.add((AcoNode)Current.getEdge(i).getNode2());
+			adjindex[i] = Adj.get(i).getIdx();
+		}
+
+		//Map to sort node index , by descendent probability 
+		Map<Integer,Double> unsortMap = new HashMap<Integer,Double>();
+		ValueComparator bvc = new ValueComparator(unsortMap); 
+		Map<Integer,Double> treeMap = new TreeMap<Integer,Double>(bvc);
+
+		//Fills unsortMap with Key -> index of adjacent nodes ; Value -> Probabilty 
+		for(int k=0; k < nbedges ; ++k) {
+			unsortMap.put(adjindex[k],probability[k]);
+		}
+
+		//Map is sorted by highest value to lowest
+		treeMap.putAll(unsortMap);
+		index = treeMap.keySet().toArray();
 		
+		LinkedList<AcoNode> J1 = new LinkedList<AcoNode>();	//List of non-visited Adjacent Nodes J to current Node i
+		Collection<AcoNode> J = new ArrayList<AcoNode>(); //Collection identical to J1
+		Prob uniform = new Prob();
+		
+		//Fills collection with ordered nodes 
 		for(int i = 0; i < index.length; ++i) {
-			NodeOrdered.add(Adj.get(index[i]));
+			J.add(((Ant)obj).G.nodes[((int)(index[i])-1)]);
 		}
-		
-		//returns List of Nodes ordered from highest probability of tranversing to lowest
-		return NodeOrdered;
+
+		J.removeAll(((Ant)obj).path);	//eliminates nodes that have already been visited
+		J1.addAll(J);	//Makes a copy of Collection to LinkedList	
+
+		//Returns next node
+		if (J1.isEmpty()) {
+			return Adj.get(uniform.uniformDist(Adj.size())).getIdx();	//if J is empty, ant chooses uniformly between already visited adjacent nodes  
+
+		} else {
+			return J1.get(0).getIdx();	//ant chooses non visited node with the highest probability
+		}		
 	}
 
 	//creates next event
-	Move newMove() {
+	private Move newMove() {
 		//computes next node
 		/* from node i -> last node of path
 		 * to node j -> new node calculated
@@ -90,5 +118,21 @@ public class Move extends Event {
 		 * */
 		//returns new event
 		return new Move(obj, Prob.expRand(delta/**w*/), alpha, beta, delta, plevel);
+	}
+
+	//pretty print a map
+	public static <K, V> void printMap(Map<K, V> map) {
+		for (Map.Entry<K, V> entry : map.entrySet()) {
+			System.out.println("Key : " + entry.getKey() 
+			+ " Value : " + entry.getValue());
+		}
+	}
+
+	//print collection
+	void printCollection(Collection<AcoNode> X) {
+		for (Iterator<AcoNode> i = X.iterator(); i.hasNext();) {
+			AcoNode item = i.next();
+			System.out.println(item.toString());
+		}
 	}
 }
