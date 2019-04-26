@@ -59,58 +59,41 @@ public class XMLUtils {
 		    }
 		  }
 	
-	public static double getFinalinst() {
+	public static double[] getDouble() {
+		double i[] = {0 , 0 , 0 , 0 , 0 , 0 , 0};
 		String s = rootElement.getAttribute("finalinst");
-		double i= Double.parseDouble(s); 
-		return i;
-	}
-	
-	public static double getPLevel() {
-		String s = rootElement.getAttribute("plevel");
-		double i= Double.parseDouble(s); 
-		return i;
-	}
-	
-	public static int getAntCol() {
-		String s = rootElement.getAttribute("antcolsize");
-		int i= Integer.parseInt(s); 
-		return i;
-	}
-	
-	public static int getNbNodes() {
-		NodeList n = rootElement.getElementsByTagName("graph");
-		Element graph = (Element) n.item(0);
-		String s = graph.getAttribute("nbnodes");
-		int i= Integer.parseInt(s); 
-		return i;
-	}
-	
-	public static int getNestNode() {
-		NodeList n = rootElement.getElementsByTagName("graph");
-		Element graph = (Element) n.item(0);
-		String s = graph.getAttribute("nestnode");
-		int i= Integer.parseInt(s); 
-		return i;
-	}
-	
-	public static double[] getGreek() {
-		double i[] = {0,0,0,0,0};
+		i[0]= Double.parseDouble(s); 
+		s = rootElement.getAttribute("plevel");
+		i[1]= Double.parseDouble(s); 
 		NodeList n = rootElement.getElementsByTagName("events");
 		Element event = (Element) n.item(0);
 		NodeList n1 = event.getElementsByTagName("move");
 		Element move = (Element) n1.item(0);
-		String s = move.getAttribute("alpha");
-		i[0] = Double.parseDouble(s); 
+		s = move.getAttribute("alpha");
+		i[2] = Double.parseDouble(s); 
 		s = move.getAttribute("beta");
-		i[1] = Double.parseDouble(s); 
+		i[3] = Double.parseDouble(s); 
 		s = move.getAttribute("delta");
-		i[2] = Double.parseDouble(s);
+		i[4] = Double.parseDouble(s);
 		NodeList n2 = event.getElementsByTagName("evaporation");
 		Element evap = (Element) n2.item(0);
 		s = evap.getAttribute("eta");
-		i[3] = Double.parseDouble(s);
+		i[5] = Double.parseDouble(s);
 		s = evap.getAttribute("rho");
-		i[4] = Double.parseDouble(s);
+		i[6] = Double.parseDouble(s);
+		return i;
+	}
+	
+	public static int[] getInt() {
+		int i[] = {0 , 0 , 0 };
+		String s = rootElement.getAttribute("antcolsize");
+		i[0]= Integer.parseInt(s); 
+		NodeList n = rootElement.getElementsByTagName("graph");
+		Element graph = (Element) n.item(0);
+		s = graph.getAttribute("nbnodes");
+		i[1]= Integer.parseInt(s); 
+		s = graph.getAttribute("nestnode");
+		i[2]= Integer.parseInt(s);
 		return i;
 	}
 	
