@@ -1,6 +1,6 @@
-aco_tools package
+Package aco_tools
 
-Contains the following classes:
+This package contains the following classes:
 - CollectionTools
 - Prob
 - ValueComparator
