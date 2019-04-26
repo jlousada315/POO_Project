@@ -21,27 +21,28 @@ public class TsfSimulator {
 		System.out.println(vali);
 	
 		/*Initialization*/
-		double finalinst = XMLUtils.getFinalinst();
+		double aux[] = XMLUtils.getDouble();
+		double finalinst = aux[0];
 		System.out.println("finalinst = " + finalinst);
-		int antcolsize = XMLUtils.getAntCol(); 
-		System.out.println("antcolsize = " + antcolsize);
-		double plevel = XMLUtils.getPLevel();
+		double plevel = aux[1];
 		System.out.println("plevel = " + plevel);
-		int nbnodes = XMLUtils.getNbNodes();
-		System.out.println("nbnodes = " + nbnodes);
-		int nestnode = XMLUtils.getNestNode();
-		System.out.println("nestnode = " + nestnode);
-		double aux[] = XMLUtils.getGreek();
-		double alpha = aux[0];
+		double alpha = aux[2];
 		System.out.println("alpha = " + alpha);
-		double beta = aux[1];
+		double beta = aux[3];
 		System.out.println("beta = " + beta);
-		double delta = aux[2];
+		double delta = aux[4];
 		System.out.println("delta = " + delta);
-		double eta = aux[3];
+		double eta = aux[5];
 		System.out.println("eta = " + eta);
-		double rho = aux[4];
+		double rho = aux[6];
 		System.out.println("rho = " + rho);
+		int aux1[] = XMLUtils.getInt();
+		int antcolsize = aux1[0]; 
+		System.out.println("antcolsize = " + antcolsize);
+		int nbnodes = aux1[1];
+		System.out.println("nbnodes = " + nbnodes);
+		int nestnode = aux1[2];
+		System.out.println("nestnode = " + nestnode);
 		double[][] weight = XMLUtils.getWeights(); 
 		for(int i=0; i< nbnodes; i++) {
 		    System.out.println( weight[i][0] +" "+ weight[i][1] +" "+ weight[i][2] +" "+ weight[i][3] +" "+ weight[i][4] );
