@@ -39,8 +39,8 @@ public class Move extends Event{
 
 		//Array with each edge with weight and Adjacent list of Nodes 
 		for(int i = 0; i < Current.getEdgesSize();++i) {
-			w[i] = ((AcoEdge)Current.getEdge(i)).getWeight();
-			Adj.add((AcoNode)Current.getEdge(i).getNode2());
+			w[i] = Current.edges.get(i).weight;
+			Adj.add(Current.edges.get(i).getNode2());
 		}
 
 		//Probability Calculation
@@ -70,7 +70,7 @@ public class Move extends Event{
 
 		//Fills List Adj with adjacent nodes 
 		for(int i = 0 ; i < nbedges ; ++i) {
-			Adj.add((AcoNode)Current.getEdge(i).getNode2());
+			Adj.add((AcoNode)Current.edges.get(i).getNode2());
 			adjindex[i] = Adj.get(i).getIdx();
 		}
 

@@ -26,11 +26,11 @@ public class Evap extends Event{
 	
 	//evaporates pheromones by rho
 	private boolean evapFromEdge(AcoEdge edge) {
-		if(edge.getPheromone()>rho) {
-			edge.setPheromone(-rho);
+		if(edge.pheromone>rho) {
+			edge.pheromone -= rho;
 			return true;
 		}
-		edge.setPheromone(0);
+		edge.pheromone = 0;
 		return false;
 	}
 	

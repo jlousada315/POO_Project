@@ -68,11 +68,11 @@ public class Ant {
 	void updatePheromones() {
 		double pathW = 0;
 		for(int i=0; i<path.size()-1; i++) {
-			pathW += ((AcoEdge)path.get(i).getEdge(path.get(i+1))).getWeight();
+			pathW += ((AcoEdge)path.get(i).getEdge(path.get(i+1))).weight;
 		}
 		double updateValue = gamma*G.totalW/pathW;
 		for(int i=0; i<path.size()-1; i++) 
-			((AcoEdge)path.get(i).getEdge(path.get(i+1))).setPheromone(updateValue);
+			((AcoEdge)path.get(i).getEdge(path.get(i+1))).pheromone += updateValue;
 	}
 
 	//prints path 
