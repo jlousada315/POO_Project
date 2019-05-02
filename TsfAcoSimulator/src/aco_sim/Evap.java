@@ -19,18 +19,18 @@ public class Evap extends Event{
 	@Override
 	public void simulate(PEC pec) {
 		//executes current event
-		if(evapFromEdge((AcoEdge)obj))
+		if(evapFromEdge())
 			//creates next event
-			pec.addEvPEC(newEvap());		
+			pec.addEvPEC(newEvap());
 	}
 	
 	//evaporates pheromones by rho
-	private boolean evapFromEdge(AcoEdge edge) {
-		if(edge.pheromone>rho) {
-			edge.pheromone -= rho;
+	private boolean evapFromEdge() {
+		if(((AcoEdge)obj).pheromone>rho) {
+			((AcoEdge)obj).pheromone -= rho;
 			return true;
 		}
-		edge.pheromone = 0;
+		((AcoEdge)obj).pheromone = 0;
 		return false;
 	}
 	

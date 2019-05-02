@@ -18,4 +18,8 @@ public abstract class Event {
 	public double getTimestamp() {
 		return timestamp;
 	}
+	
+	public String toString() {
+		return (obj.toString() + "time :" + timestamp);
+	}
 }

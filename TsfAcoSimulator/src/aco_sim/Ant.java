@@ -7,6 +7,7 @@ public class Ant {
 	LinkedList<AcoNode> path;
 	String hamiltonian;
 	AcoGraph G;
+	boolean hFlag = false;
 	double gamma;
 	double time;
 
@@ -75,12 +76,14 @@ public class Ant {
 	//if cycle is Hamiltonian, increase level of pheromones on the path
 		void updatePheromones() {
 			double pathW = 0;
+			Evap E[] = new Evap[path.size()];
 			for(int i=0; i<path.size()-1; i++) {
 				pathW += ((AcoEdge)path.get(i).getEdge(path.get(i+1))).weight;
 			}
 			double updateValue = gamma*G.totalW/pathW;
-			for(int i=0; i<path.size()-1; i++) 
-				((AcoEdge)path.get(i).getEdge(path.get(i+1))).pheromone += updateValue;
+			for(int i=0; i<path.size()-1; i++) { 
+				path.get(i).getEdge(path.get(i+1)).pheromone += updateValue;	
+			}	
 		}
 
 	//update's Ant's path according to rules.

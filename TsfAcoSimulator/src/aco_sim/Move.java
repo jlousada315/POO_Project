@@ -32,13 +32,11 @@ public class Move extends Event{
 	/*Methods*/
 
 	@Override
-	
 	public void simulate(PEC pec) {
 		// create next event
 		int next_nodeidx = this.nextAcoNode();
 		((Ant)obj).updatePath(next_nodeidx);
-		pec.addEvPEC(newMove());
-		
+		pec.addEvPEC(newMove());	
 	}
 
 	private Double[] calculateProb() {		
@@ -128,13 +126,6 @@ public class Move extends Event{
 
 	//creates next event
 	Move newMove() {
-		//computes next AcoNode
-		/* from AcoNode i -> last AcoNode of path
-		 * to AcoNode j -> new AcoNode calculated
-		 * get weight w for edge from i to j
-		 * */
-		//returns new event
-		
 		return new Move(obj, Prob.expRand(delta*a_ij), alpha, beta, delta, plevel);
 	}
 

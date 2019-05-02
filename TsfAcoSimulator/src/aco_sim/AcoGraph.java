@@ -7,7 +7,7 @@ public class AcoGraph implements Graph {
 	double totalW;
 	final int nbnodes;
 	final int nestnode;
-	final AcoNode[] nodes;
+	private final AcoNode[] nodes;
 	
 	//constructor
 	public AcoGraph(int nbnodes, int nestnode, double[][] weights){
