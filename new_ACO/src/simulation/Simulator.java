@@ -1,93 +1,81 @@
 package simulation;
 
-import graph.Graph;
-
-import eventHandler.Ant;
-import eventHandler.Move;
-import pec.*;
 import xml_utils.Var;
+import pec.Event;
+import graph.Graph;
+import pec.*;
 
-public class Simulator {
-	//attributes
-	Ant[] ants;
+public class Simulator implements ISimulator {
+	//fields
+	Var v;
 	PEC pec;
-	private Event currentEvent;
+	Graph G;
+	//Ant[] ants;
+	int[] counter; // totalEvents, nbMoves, obsNum
+	int[] hamiltonian;
+	double hamiltonianWeight;
 	
 	//constructor
-	public Simulator(Var v , Graph G, Ant[] ants) {
+	public Simulator(Var var) {
+		this.v = var;
 		pec = new PEC();
-		this.ants = ants;
-		
-		//this.run();
+		G = new Graph(v, pec);
+		//ants = new Ant[var.getAntcolsize()];
+		counter = new int[3];
+		this.run();
 	}
 	
-	//run simulation until final instant is reached
-	public void run(Var v) {
-		int obs_nb = 1;
+	@Override
+	public void run() {
 		//initialize events
-		init();
+		this.initEvents();
 		//get initial event
-		currentEvent = pec.nextEvPEC();
+		Event currentEvent = pec.nextEvPEC();
 		double currentTime = currentEvent.getTimestamp();
-		//run while current time lower than tau
-		int nbmoves = v.getAntcolsize();
-		int totalEvents = v.getAntcolsize();;
+		//run while current time lower than finalinst
 		while(currentTime < v.getFinalinst()) {
-			//Prints information
-			if(currentTime >= (obs_nb*(v.getFinalinst()/20))) {
-				System.out.println("Observation number: " + (obs_nb));				
-				System.out.println("		Present instant: " + currentTime);
-				System.out.println("		Number of move events: " + nbmoves);  //implementation missing
-				System.out.println("		Number of evaporation events: " + (totalEvents-nbmoves) ); //implementation missing
-				System.out.println("		Hamiltonian cycle: ");		 //implementation missing
-				++obs_nb;
+			if(currentTime >= (counter[2]*(v.getFinalinst()/20))) {
+				print(currentTime);
 			}
-
-			currentEvent.simulate(pec);
-			if(currentEvent instanceof Move) {
-				nbmoves++;
-		/*		if(((Ant)currentEvent.obj).hFlag) {
-					initEvap();
-				}*/
-			}
-			
+			currentEvent.simulate(pec, G, v);
 			currentEvent = pec.nextEvPEC();
 			currentTime += currentEvent.getTimestamp();
-			
-			totalEvents++;		
-			
+			/*if(currentEvent instanceof Move) {
+				counter[1]++;
+				if(((Ant)currentEvent.obj).hFlag) {
+					initEvap();
+				}
+			}*/
+			counter[0]++;
 		}
-		System.out.println("Time limit reached: t = " + v.getFinalinst());
+		System.out.println("Time limit reached: t = " + currentTime);
 	}
-	
-	void init() {
-		;
-	}
-	
-	/*
-	 
-	 
-	//initialize events
-	void initEvents() {
-		//init moves and evaps
-		for(int i = 0; i < ants.length ; i++) {
-			initM[i] = new Move(ants[i], 0 ,par[0], par[1], par[2], par[5]);		
-			pec.addEvPEC(initM[i]);	
-			initM[i].simulate(pec);
-		}	
-	}
-	
-	void initEvap() {
+
+	@Override
+	public void initEvents() {
+		//init moves
 		
-		Edge aux;
-		for(int i = 0; i < ((Ant)currentEvent.obj).path.size()-1 ; i++) { //path is empty.
-				aux = ((Ant)currentEvent.obj).path.get(i).getEdge(((Ant)currentEvent.obj).path.get(i+1));
-				pec.addEvPEC(new Evap(aux, par[3], par[4]));
-		}
+		//init counters
+		counter[0] = v.getAntcolsize();
+		counter[1] = v.getAntcolsize();
+		counter[2] = 1;
 	}
-	*/
-	//other methods
-	public void printG(Graph G) {
-		System.out.println(G.toString());
+
+	@Override
+	public void bestHamiltonian(int[] path, double pathWeight) {
+		//sets the best hamiltonian so far
+		hamiltonian = path;
+		hamiltonianWeight = pathWeight;
+	}
+
+	@Override
+	public void print(double currentTime) {
+		//prints simulation information
+		System.out.println("Observation number: " + counter[2]);				
+		System.out.println("		Present instant: " + currentTime);
+		System.out.println("		Number of move events: " + counter[1]); 
+		System.out.println("		Number of evaporation events: " + (counter[0]-counter[1]));
+		System.out.println("		Hamiltonian cycle: " + hamiltonian);
+		++counter[2];
 	}
 }

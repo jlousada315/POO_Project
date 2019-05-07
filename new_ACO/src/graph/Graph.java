@@ -8,35 +8,40 @@ import java.util.Map;
 import java.util.TreeMap;
 
 import eventHandler.*;
+import pec.PEC;
 import aco_tools.Prob;
 import aco_tools.ValueComparator;
 import xml_utils.Var;
 
 public class Graph implements IGraph {
 	//attributes
-	double totalW;
-	final int nestnode;
-	final Node[] nodes;
+		Var v;
+		PEC pec;
+		double totalW;
+		final int nestnode;
+		final Node[] nodes;
 
-	//constructor
-	public Graph(Var v){
-		this.nestnode = v.getNestnode();
-		int nbnodes = v.getNbnodes();
-		//create graph
-		nodes = new Node[nbnodes];
-		for(int i=0; i<nbnodes; i++) {
-			nodes[i] = new Node(i+1);
-		}
-		double[][] weights = v.getWeight();
-		for(int i=0; i<nbnodes; i++)
-			for(int j=i+1; j<nbnodes; j++) {
-				if(v.getWeight()[i][j]!=0) {
-					nodes[i].setEdge(nodes[j],weights[i][j]);
-					nodes[j].setEdge(nodes[i],weights[i][j]);
-					totalW += weights[i][j];
-				}
+		//constructor
+		public Graph(Var v, PEC pec){
+			this.v = v;
+			this.nestnode = v.getNestnode();
+			int nbnodes = v.getNbnodes();
+			//create graph
+			nodes = new Node[nbnodes];
+			for(int i=0; i<nbnodes; i++) {
+				nodes[i] = new Node(i+1);
 			}
-	}
+			double[][] weights = v.getWeight();
+			for(int i=0; i<nbnodes; i++)
+				for(int j=i+1; j<nbnodes; j++) {
+					if(v.getWeight()[i][j]!=0) {
+						nodes[i].setEdge(nodes[j],weights[i][j]);
+						nodes[j].setEdge(nodes[i],weights[i][j]);
+						totalW += weights[i][j];
+					}
+				}
+			this.pec = pec;
+		}
 
 	//get total weight
 	public double getTotalW() {
@@ -77,7 +82,7 @@ public class Graph implements IGraph {
 	}
 	
 	//calculates prob of nextnodes
-	public Double[] calculateProb(Var v, Ant A) {		
+	public Double[] calculateProb(Ant A) {		
 		Node Current = nodes[A.getLast()-1]; // Current Node
 		LinkedList<Node> Adj = new LinkedList<Node>();  //List of Adjacent AcoNodes of Current AcoNode
 		double ci = 0;	//Normalization Constant
@@ -107,14 +112,14 @@ public class Graph implements IGraph {
 	}
 
 	//Calculates the next Node 
-	public int nextNode(Var v,Ant A) {
+	public int nextNode(Ant A) {
 		Node Current = nodes[A.getLast()-1]; // Current Node
 		LinkedList<Node> Adj = new LinkedList<Node>();  //List of Adjacent AcoNodes of Current AcoNode		
 		int nbedges = Current.getEdgesSize(); //number of edges adjacent to current AcoNode
 		Integer adjindex[] = new Integer[nbedges];  
 		Object index[] = new Object[nbedges];
 
-		Double[] probability = calculateProb(v,A); // array of the probability of tranversing to next AcoNode
+		Double[] probability = calculateProb(A); // array of the probability of tranversing to next AcoNode
 
 		//Fills List Adj with adjacent AcoNodes 
 		for(int i = 0 ; i < nbedges ; ++i) {
@@ -159,7 +164,7 @@ public class Graph implements IGraph {
 	}
 		
 	//if cycle is Hamiltonian, increase level of pheromones on the path
-	public void updatePheromones(Var v, Ant A) {
+	public void updatePheromones(Ant A) {
 		double pathW = 0;
 		for(int i=0; i<A.getPath().size()-1; i++) {
 			pathW += ((Edge)nodes[A.getPath().get(i)-1].getEdge(nodes[A.getPath().get(i+1)-1])).weight;
@@ -171,5 +176,25 @@ public class Graph implements IGraph {
 		}	
 	}
 	
+	//init Evap moves
+		public void initEvapMoves(Ant A) {
+			int[] aux = new int[2];
+			LinkedList<Integer> path = A.getPath();
+			for(int i=0; i<path.size()-1; i++) {
+				aux[0] = path.get(i);
+				aux[1] = path.get(i+1);
+				pec.addEvPEC(new Evap(aux, Prob.expRand(v.getEta())));
+			}
+		}
+		
+		//evap execution over edge
+		public boolean evapFromEdge(int[] e_ij){
+			if(nodes[e_ij[0]].getEdge(nodes[e_ij[1]]).pheromone>v.getRho()) {
+				nodes[e_ij[0]].getEdge(nodes[e_ij[1]]).pheromone -= v.getRho();
+				return true;
+			}
+			nodes[e_ij[0]].getEdge(nodes[e_ij[1]]).pheromone = 0;		
+			return false;
+		}
 	
 }

@@ -78,7 +78,7 @@ public class Ant {
 				path.remove(j);
 			}
 		}else if(isHamiltonian(next_nodeidx,G.getSize())) {
-			G.updatePheromones(v, this);
+			G.updatePheromones(this);
 			System.out.println("Hamiltonian Cycle Found with path = " + "m");
 			resetPath();
 		}else{

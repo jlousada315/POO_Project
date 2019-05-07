@@ -1,37 +1,28 @@
 package eventHandler;
 
 import pec.*;
+import xml_utils.Var;
 import aco_tools.Prob;
+import graph.Graph;
 
 public class Evap extends Event{
 
-	
 	//constructor
 	public Evap(Object obj, double timestamp) {
 		super(obj, timestamp);
 	}
 
 	//simulate this event
-	@Override
-	public void simulate(PEC pec) {
-		//executes current event
-		if(evapFromEdge())
-			//creates next event
-			pec.addEvPEC(newEvap());
-	}
-	
-	//evaporates pheromones by rho
-	private boolean evapFromEdge() {
-		if(((Edge)obj).pheromone>rho) {
-			((Edge)obj).pheromone -= rho;
-			return true;
+		@Override
+		public void simulate(PEC pec, Graph G, Var v) {
+			//executes current event
+			if(G.evapFromEdge((int[])obj))
+				//creates next event
+				pec.addEvPEC(newEvap(v.getEta()));
 		}
-		((Edge)obj).pheromone = 0;
-		return false;
-	}
-	
-	//creates next event
-	private Evap newEvap() {
-		return new Evap(obj, eta, rho);
-	}
+		
+		//creates next event
+		private Evap newEvap(double eta) {
+			return new Evap(obj, Prob.expRand(eta));
+		}
 }

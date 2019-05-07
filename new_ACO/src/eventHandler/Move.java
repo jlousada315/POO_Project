@@ -19,7 +19,7 @@ public class Move extends Event{
 	public void simulate(PEC pec, Graph G,Var v) {
 		// create next event
 		int current_node = ((Ant)obj).getLast();
-		int next_nodeidx = G.nextNode(v, (Ant)obj);
+		int next_nodeidx = G.nextNode((Ant)obj);
 		((Ant)obj).updatePath(next_nodeidx,G,v);
 		int real_next = ((Ant)obj).getLast();
 		pec.addEvPEC(newMove(v.getDelta(), G.getEdgeWeigth(current_node,real_next)));	
@@ -30,18 +30,6 @@ public class Move extends Event{
 		return new Move((Ant)obj , Prob.expRand(delta*a_ij));
 	}
 
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
 	/*
 	//pretty print a map
 	public static <K, V> void printMap(Map<K, V> map) {
@@ -50,12 +38,10 @@ public class Move extends Event{
 			+ " Value : " + entry.getValue());
 		}
 	}
-
 	void printCollection(Collection<Node> X) {
 		for (Iterator<Node> i = X.iterator(); i.hasNext();) {
 			Node item = i.next();
 			System.out.println(item.toString());		
 			}
-
 	}*/
 }
