@@ -18,6 +18,10 @@ public class Ant {
 	public LinkedList<Integer> getPath() {
 		return path;
 	}
+	
+	public int getLast() {
+		return path.getLast();
+	}
 
 	//resets path to Node to find another Hamiltonian cycle
 	public void resetPath() {

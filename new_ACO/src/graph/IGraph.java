@@ -20,6 +20,6 @@ public interface IGraph {
 	int nextNode(Var v, Ant A);
 	
 	//updates Pheromone level.
-	void updatePheromones(int next_node, Ant A, Var v);
+	void updatePheromones(Var v,Ant A);
 
 }

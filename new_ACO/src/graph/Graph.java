@@ -19,16 +19,18 @@ public class Graph implements IGraph {
 	final Node[] nodes;
 
 	//constructor
-	public Graph(int nbnodes, int nestnode, double[][] weights){
-		this.nestnode = nestnode;
+	public Graph(Var v){
+		this.nestnode = v.getNestnode();
+		int nbnodes = v.getNbnodes();
 		//create graph
 		nodes = new Node[nbnodes];
 		for(int i=0; i<nbnodes; i++) {
 			nodes[i] = new Node(i+1);
 		}
+		double[][] weights = v.getWeight();
 		for(int i=0; i<nbnodes; i++)
 			for(int j=i+1; j<nbnodes; j++) {
-				if(weights[i][j]!=0) {
+				if(v.getWeight()[i][j]!=0) {
 					nodes[i].setEdge(nodes[j],weights[i][j]);
 					nodes[j].setEdge(nodes[i],weights[i][j]);
 					totalW += weights[i][j];
@@ -69,10 +71,14 @@ public class Graph implements IGraph {
 		}
 		return str;
 	}
-
+	
+	public double getEdgeWeigth(int n1 , int n2){
+		return nodes[n1-1].getEdge(nodes[n2-1]).weight;
+	}
+	
 	//calculates prob of nextnodes
 	public Double[] calculateProb(Var v, Ant A) {		
-		Node Current = A.getPath().get(A.getPath().size()-1); // Current AcoNode
+		Node Current = nodes[A.getLast()-1]; // Current Node
 		LinkedList<Node> Adj = new LinkedList<Node>();  //List of Adjacent AcoNodes of Current AcoNode
 		double ci = 0;	//Normalization Constant
 		double w[] = new double[Current.edges.size()]; //Array of weights
@@ -102,7 +108,7 @@ public class Graph implements IGraph {
 
 	//Calculates the following AcoNode
 	public int nextNode(Var v,Ant A) {
-		Node Current = A.getPath().get(A.getPath().size()-1); // Current AcoNode NOTE: implement getLast() in Ant !!!!!!
+		Node Current = nodes[A.getLast()-1]; // Current Node
 		LinkedList<Node> Adj = new LinkedList<Node>();  //List of Adjacent AcoNodes of Current AcoNode		
 		int nbedges = Current.edges.size(); //number of edges adjacent to current AcoNode
 		Integer adjindex[] = new Integer[nbedges];  
@@ -138,8 +144,11 @@ public class Graph implements IGraph {
 		for(int i = 0; i < index.length; ++i) {
 			J.add(getNode((int)index[i]));
 		}
-
-		J.removeAll(A.getPath());	//eliminates AcoNodes that have already been visited
+		
+		for(int i = 0; i <A.getPath().size() ;++i) {
+			J.remove(nodes[A.getPath().get(i)-1]);
+		}
+		
 		J1.addAll(J);	//Makes a copy of Collection to LinkedList	
 
 
@@ -158,11 +167,11 @@ public class Graph implements IGraph {
 	public void updatePheromones(Var v, Ant A) {
 		double pathW = 0;
 		for(int i=0; i<A.getPath().size()-1; i++) {
-			pathW += ((Edge)A.getPath().get(i).getEdge(A.getPath().get(i+1))).weight;
+			pathW += ((Edge)nodes[A.getPath().get(i)-1].getEdge(nodes[A.getPath().get(i+1)-1])).weight;
 		}
-		double updateValue = v.getGamma()*totalW/pathW;
+		double updateValue = v.getPlevel()*totalW/pathW;
 		for(int i=0; i<A.getPath().size()-1; i++) { 
-			((Edge)A.getPath().get(i).getEdge(A.getPath().get(i+1))).pheromone += updateValue;	
+			((Edge)nodes[A.getPath().get(i)-1].getEdge(nodes[A.getPath().get(i+1)-1])).pheromone += updateValue;	
 		}	
 	}
 	

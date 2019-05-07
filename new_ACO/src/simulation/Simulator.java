@@ -1,43 +1,40 @@
 package simulation;
 
+import graph.Graph;
+
+import eventHandler.Ant;
+import eventHandler.Move;
 import pec.*;
+import xml_utils.Var;
 
 public class Simulator {
 	//attributes
 	Ant[] ants;
 	PEC pec;
-	double[] par;
-	Move[] initM;
-	String[] GlobalHamiltonian;
 	private Event currentEvent;
 	
 	//constructor
-	public Simulator(int n, int n1, double[][] aij, double alpha, double beta, double delta,
-						double eta, double rho, double gamma, int miu, double tau) {
+	public Simulator(Var v , Graph G, Ant[] ants) {
 		pec = new PEC();
-		ants = new Ant[miu];
-		initM = new Move[miu];
-		Graph g = new Graph(n, n1, aij);
-		for(int i=0; i<miu; i++) 
-			ants[i] = new Ant(g, gamma);
-		par = new double[]{alpha, beta, delta, eta, rho, gamma, tau, miu};
+		this.ants = ants;
+		
 		//this.run();
 	}
 	
 	//run simulation until final instant is reached
-	public void run() {
+	public void run(Var v) {
 		int obs_nb = 1;
 		//initialize events
-		initEvents();
+		init();
 		//get initial event
 		currentEvent = pec.nextEvPEC();
 		double currentTime = currentEvent.getTimestamp();
 		//run while current time lower than tau
-		int nbmoves = (int)par[7];
-		int totalEvents = (int)par[7];
-		while(currentTime < this.par[6]) {
+		int nbmoves = v.getAntcolsize();
+		int totalEvents = v.getAntcolsize();;
+		while(currentTime < v.getFinalinst()) {
 			//Prints information
-			if(currentTime >= (obs_nb*(par[6]/20))) {
+			if(currentTime >= (obs_nb*(v.getFinalinst()/20))) {
 				System.out.println("Observation number: " + (obs_nb));				
 				System.out.println("		Present instant: " + currentTime);
 				System.out.println("		Number of move events: " + nbmoves);  //implementation missing
@@ -49,9 +46,9 @@ public class Simulator {
 			currentEvent.simulate(pec);
 			if(currentEvent instanceof Move) {
 				nbmoves++;
-				if(((Ant)currentEvent.obj).hFlag) {
+		/*		if(((Ant)currentEvent.obj).hFlag) {
 					initEvap();
-				}
+				}*/
 			}
 			
 			currentEvent = pec.nextEvPEC();
@@ -60,12 +57,19 @@ public class Simulator {
 			totalEvents++;		
 			
 		}
-		System.out.println("Time limit reached: t = " + par[6]);
+		System.out.println("Time limit reached: t = " + v.getFinalinst());
 	}
 	
+	void init() {
+		;
+	}
+	
+	/*
+	 
+	 
 	//initialize events
 	void initEvents() {
-		/*init moves and evaps*/
+		//init moves and evaps
 		for(int i = 0; i < ants.length ; i++) {
 			initM[i] = new Move(ants[i], 0 ,par[0], par[1], par[2], par[5]);		
 			pec.addEvPEC(initM[i]);	
@@ -81,9 +85,9 @@ public class Simulator {
 				pec.addEvPEC(new Evap(aux, par[3], par[4]));
 		}
 	}
-	
+	*/
 	//other methods
-	public void printG() {
-		System.out.println(this.ants[0].G.toString());
+	public void printG(Graph G) {
+		System.out.println(G.toString());
 	}
 }

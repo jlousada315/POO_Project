@@ -4,15 +4,11 @@ import pec.*;
 import aco_tools.Prob;
 
 public class Evap extends Event{
-	//attributes
-	final double eta;
-	final double rho;
+
 	
 	//constructor
-	public Evap(Object obj, double eta, double rho) {
-		super(obj, Prob.expRand(eta));
-		this.eta = eta;
-		this.rho = rho;
+	public Evap(Object obj, double timestamp) {
+		super(obj, timestamp);
 	}
 
 	//simulate this event
