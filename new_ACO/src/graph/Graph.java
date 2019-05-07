@@ -106,11 +106,11 @@ public class Graph implements IGraph {
 		return probability;
 	}
 
-	//Calculates the following AcoNode
+	//Calculates the next Node 
 	public int nextNode(Var v,Ant A) {
 		Node Current = nodes[A.getLast()-1]; // Current Node
 		LinkedList<Node> Adj = new LinkedList<Node>();  //List of Adjacent AcoNodes of Current AcoNode		
-		int nbedges = Current.edges.size(); //number of edges adjacent to current AcoNode
+		int nbedges = Current.getEdgesSize(); //number of edges adjacent to current AcoNode
 		Integer adjindex[] = new Integer[nbedges];  
 		Object index[] = new Object[nbedges];
 
@@ -118,7 +118,7 @@ public class Graph implements IGraph {
 
 		//Fills List Adj with adjacent AcoNodes 
 		for(int i = 0 ; i < nbedges ; ++i) {
-			Adj.add(Current.edges.get(i).node2);
+			Adj.add(Current.edges.get(i).node2);			
 			adjindex[i] = Adj.get(i).nodeidx;
 		}
 		
@@ -136,21 +136,17 @@ public class Graph implements IGraph {
 		treeMap.putAll(unsortMap);
 		index = treeMap.keySet().toArray();
 
-		LinkedList<Node> J1 = new LinkedList<Node>();	//List of non-visited Adjacent AcoNodes J to current AcoNode i
-		Collection<Node> J = new ArrayList<Node>();		//Collection identical to J1
+		LinkedList<Integer> J1 = new LinkedList<Integer>();	//List of non-visited Adjacent AcoNodes J to current AcoNode i
+		Collection<Integer> J = new ArrayList<Integer>();		//Collection identical to J1
 		Prob uniform = new Prob();
-
+		
 		//Fills collection with ordered AcoNodes 
 		for(int i = 0; i < index.length; ++i) {
-			J.add(getNode((int)index[i]));
+			J.add((int)index[i]);
 		}
-		
-		for(int i = 0; i <A.getPath().size() ;++i) {
-			J.remove(nodes[A.getPath().get(i)-1]);
-		}
-		
-		J1.addAll(J);	//Makes a copy of Collection to LinkedList	
 
+		J.removeAll(A.getPath());	//eliminates AcoNodes that have already been visited
+		J1.addAll(J);	//Makes a copy of Collection to Linked
 
 		//Returns next AcoNode
 		if(J1.isEmpty()) {		
@@ -158,8 +154,7 @@ public class Graph implements IGraph {
 			return nextnode.nodeidx;	//if J is empty, ant chooses uniformly between already visited adjacent AcoNodes  
 
 		}else {
-			Node nextnode = J1.getFirst();
-			return nextnode.nodeidx;	//ant chooses non visited AcoNode with the highest probability
+			return J1.getFirst();	//ant chooses non visited AcoNode with the highest probability
 		}		
 	}
 		
@@ -170,6 +165,7 @@ public class Graph implements IGraph {
 			pathW += ((Edge)nodes[A.getPath().get(i)-1].getEdge(nodes[A.getPath().get(i+1)-1])).weight;
 		}
 		double updateValue = v.getPlevel()*totalW/pathW;
+		System.out.println("New Value" + updateValue);
 		for(int i=0; i<A.getPath().size()-1; i++) { 
 			((Edge)nodes[A.getPath().get(i)-1].getEdge(nodes[A.getPath().get(i+1)-1])).pheromone += updateValue;	
 		}	

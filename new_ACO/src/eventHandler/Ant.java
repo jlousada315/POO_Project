@@ -79,12 +79,11 @@ public class Ant {
 			}
 		}else if(isHamiltonian(next_nodeidx,G.getSize())) {
 			G.updatePheromones(v, this);
-			//System.out.println("Hamiltonian Cycle Found with path = " + hamiltonian);
+			System.out.println("Hamiltonian Cycle Found with path = " + "m");
 			resetPath();
-		}else if(path.getFirst().equals(next_nodeidx) != true && !hasDuplicate()){
+		}else{
 			path.add(next_nodeidx);
 		} 
-
 	}
 	
 	

@@ -7,7 +7,7 @@ import java.util.NoSuchElementException;
 public class Node {
 	//attributes
 	protected final int nodeidx;
-	final ArrayList<Edge> edges;
+	protected final ArrayList<Edge> edges;
 	
 	//constructor
 	Node(int nodeidx){
