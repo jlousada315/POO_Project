@@ -1,5 +1,7 @@
 package simulation;
 
+import java.util.LinkedList;
+
 public interface ISimulator {
 	//runs the simulation
 	void run();
@@ -7,9 +9,6 @@ public interface ISimulator {
 	//initialize events
 	void initEvents();
 
-	//save best hamiltonian
-	void bestHamiltonian(int[] path, double pathWeight);
-	
 	//print method
 	void print(double time);
 }

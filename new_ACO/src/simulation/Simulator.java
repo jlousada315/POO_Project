@@ -1,7 +1,10 @@
+    
 package simulation;
 
 import xml_utils.Var;
 import pec.Event;
+
+import eventHandler.*;
 import graph.Graph;
 import pec.*;
 
@@ -10,17 +13,17 @@ public class Simulator implements ISimulator {
 	Var v;
 	PEC pec;
 	Graph G;
-	//Ant[] ants;
+	Ant[] ants;
 	int[] counter; // totalEvents, nbMoves, obsNum
-	int[] hamiltonian;
-	double hamiltonianWeight;
 	
 	//constructor
 	public Simulator(Var var) {
 		this.v = var;
 		pec = new PEC();
-		G = new Graph(v, pec);
-		//ants = new Ant[var.getAntcolsize()];
+		G = new Graph(v);
+		ants = new Ant[var.getAntcolsize()];
+		for(int i=0; i<ants.length; i++)
+			ants[i] = new Ant(v.getNestnode());
 		counter = new int[3];
 		this.run();
 	}
@@ -39,33 +42,27 @@ public class Simulator implements ISimulator {
 			}
 			currentEvent.simulate(pec, G, v);
 			currentEvent = pec.nextEvPEC();
-			currentTime += currentEvent.getTimestamp();
-			/*if(currentEvent instanceof Move) {
+			currentTime = currentEvent.getTimestamp();
+			if(currentEvent instanceof Move) {
 				counter[1]++;
-				if(((Ant)currentEvent.obj).hFlag) {
-					initEvap();
-				}
-			}*/
+			}
 			counter[0]++;
 		}
 		System.out.println("Time limit reached: t = " + currentTime);
+		System.out.println("Best Hamiltonian: " + G.getBestHamiltonian());
 	}
 
 	@Override
 	public void initEvents() {
 		//init moves
-		
+		for(int i=0; i<ants.length; i++) {
+			Move aux = new Move(ants[i], 0);
+			aux.simulate(pec, G, v);
+		}
 		//init counters
 		counter[0] = v.getAntcolsize();
 		counter[1] = v.getAntcolsize();
 		counter[2] = 1;
-	}
-
-	@Override
-	public void bestHamiltonian(int[] path, double pathWeight) {
-		//sets the best hamiltonian so far
-		hamiltonian = path;
-		hamiltonianWeight = pathWeight;
 	}
 
 	@Override
@@ -75,8 +72,7 @@ public class Simulator implements ISimulator {
 		System.out.println("		Present instant: " + currentTime);
 		System.out.println("		Number of move events: " + counter[1]); 
 		System.out.println("		Number of evaporation events: " + (counter[0]-counter[1]));
-		System.out.println("		Hamiltonian cycle: " + hamiltonian);
+		System.out.println("		Hamiltonian cycle: " + G.getBestHamiltonian());
 		++counter[2];
 	}
 }
-

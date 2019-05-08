@@ -17,17 +17,18 @@ public class Move extends Event{
 
 	@Override
 	public void simulate(PEC pec, Graph G,Var v) {
+		Ant aux = (Ant)obj;
 		// create next event
-		int current_node = ((Ant)obj).getLast();
-		int next_nodeidx = G.nextNode((Ant)obj);
-		((Ant)obj).updatePath(next_nodeidx,G,v);
-		int real_next = ((Ant)obj).getLast();
-		pec.addEvPEC(newMove(v.getDelta(), G.getEdgeWeigth(current_node,real_next)));	
+		int current_node = aux.getLast();
+		int next_nodeidx = G.nextNode(aux);
+		aux.updatePath(next_nodeidx,G,v,pec,getTimestamp());
+		int real_next = (aux).getLast();
+		pec.addEvPEC(newMove(v.getDelta(), G.getEdgeWeigth(current_node,real_next)));
 	}
 
 	//creates next eventT
 	Move newMove(double delta,double a_ij) {
-		return new Move((Ant)obj , Prob.expRand(delta*a_ij));
+		return new Move((Ant)obj , getTimestamp()+Prob.expRand(delta*a_ij));
 	}
 
 	/*

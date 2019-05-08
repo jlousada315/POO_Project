@@ -2,18 +2,17 @@ package main;
 
 import xml_utils.*;
 
-import eventHandler.Ant;
-import graph.Graph;
-
+import simulation.Simulator;
 
 
 public class TsfAcoSimulator {
 	public static void main(String[] args)  {
 
 		XMLUtils xml = new XMLUtils(args[0]);
-		Var var = xml.getV();
-
-		Graph G = new Graph(var, null);
+		Var var = xml.getV();	
+		Simulator Sim = new Simulator(var) ;
+		
+		/*Graph G = new Graph(va);
 		Ant A = new Ant(var.getNestnode());
 		System.out.print(" nest" + var.getNestnode() + "\n");
 
@@ -22,9 +21,9 @@ public class TsfAcoSimulator {
 			next_node = G.nextNode(A);
 			A.updatePath(next_node, G, var);
 			System.out.print("path " + A.toString() + "\n");
-		}
+		}*/
 
 
-		//Simulator Sim = new Simulator(var) ;
+	//	Simulator Sim = new Simulator(var) ;
 	}
 }
