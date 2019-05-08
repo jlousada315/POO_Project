@@ -3,6 +3,7 @@ package eventHandler;
 import java.util.*;
 
 import graph.*;
+import pec.PEC;
 import xml_utils.Var;
 
 public class Ant {
@@ -68,7 +69,7 @@ public class Ant {
 	}
 			
 	//update's Ant's path according to rules.
-	public void updatePath(int next_nodeidx, IGraph G,Var v) {
+	public void updatePath(int next_nodeidx, IGraph G, Var v, PEC pec, double timestamp) {
 		if(hasDuplicate()) {
 			int i=path.size()-1;
 			while(path.getLast().equals(path.get(i-1)) != true) {
@@ -77,15 +78,16 @@ public class Ant {
 			for(int j = path.size()-1 ; j >= i;--j) {
 				path.remove(j);
 			}
-		} else if(isHamiltonian(next_nodeidx, G.getSize())) {
-			G.updatePheromones(this);
-			//System.out.println("Hamiltonian Cycle Found with path = " + hamiltonian);
+			next_nodeidx = G.nextNode(this);
+			updatePath(next_nodeidx,G,v,pec,timestamp);
+		}else if(isHamiltonian(next_nodeidx, G.getSize())) {
+			G.updateHamiltonian(path);
+			G.initEvap(path, pec, timestamp);
+			G.updatePheromones(path);
+			//System.out.println("Hamiltonian Cycle Found with path = " + path);
 			resetPath();
-		}else if(path.getFirst().equals(next_nodeidx) != true && !hasDuplicate()){
+		}else{ 
 			path.add(next_nodeidx);
 		} 
-
 	}
-	
-	
 }

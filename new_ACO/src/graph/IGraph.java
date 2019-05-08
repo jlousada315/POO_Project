@@ -1,6 +1,9 @@
 package graph;
 
+import java.util.LinkedList;
+
 import eventHandler.Ant;
+import pec.PEC;
 
 public interface IGraph {
 	
@@ -19,6 +22,12 @@ public interface IGraph {
 	int nextNode(Ant A);
 	
 	//updates Pheromone level.
-	void updatePheromones(Ant A);
+	void updatePheromones(LinkedList<Integer> path);
+	
+	void initEvap(LinkedList<Integer> path, PEC pec, double timestamp);
+	
+	public double getPathWeight(LinkedList<Integer> path);
+	
+	public void updateHamiltonian(LinkedList<Integer> path);
 
 }
