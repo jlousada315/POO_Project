@@ -34,7 +34,7 @@ public class Ant {
 	//prints path 
 	public void printPath() {
 		for(int i=0 ;i < path.size(); ++i ) {
-			System.out.println(path.get(i).toString());
+			System.out.print(path.get(i).toString());
 		}
 	}
 	

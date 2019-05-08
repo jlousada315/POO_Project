@@ -22,4 +22,7 @@ public interface IGraph {
 	
 	//give edge from a[0] to a[1]
 	boolean evapFromEdge(int[] a);
+	
+	//toString
+	String toString();
 }

@@ -22,7 +22,9 @@ public class Simulator implements ISimulator {
 		this.v = var;
 		pec = new PEC();
 		G = new Graph(v);
-		//ants = new Ant[var.getAntcolsize()];
+		ants = new Ant[var.getAntcolsize()];
+		for(int i=0; i<ants.length; i++)
+			ants[i] = new Ant(v.getNestnode());
 		counter = new int[3];
 		this.run();
 	}
@@ -57,8 +59,10 @@ public class Simulator implements ISimulator {
 	@Override
 	public void initEvents() {
 		//init moves
-		Move aux = new Move(ants[0], 0);
-		aux.simulate(pec, G, v);
+		for(int i=0; i<ants.length; i++) {
+			Move aux = new Move(ants[i], 0);
+			aux.simulate(pec, G, v);
+		}
 		//init counters
 		counter[0] = v.getAntcolsize();
 		counter[1] = v.getAntcolsize();

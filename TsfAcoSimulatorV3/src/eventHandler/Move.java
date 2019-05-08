@@ -15,8 +15,9 @@ public class Move extends Event{
 	/*Methods*/
 
 	@Override
-	public void simulate(PEC pec, Graph G,Var v) {
+	public void simulate(PEC pec, Graph G, Var v) {
 		Ant aux = (Ant)obj;
+		System.out.println(aux.toString());
 		// create next event
 		int current_node = (aux.getLast());
 		int next_nodeidx = G.nextNode(aux.getPath());

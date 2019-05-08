@@ -1,20 +1,16 @@
 package main;
 
 import xml_utils.*;
-
+import simulation.Simulator;
 
 public class TsfAcoSimulator {
 	public static void main(String[] args)  {
 
 		XMLUtils xml = new XMLUtils(args[0]);
 		Var var = xml.getV();
+		
+		Simulator sim = new Simulator(var);
 
-		double[][] weights = new double[var.getWeight().length][var.getWeight().length];
-		weights = var.getWeight();
-		for(int i=0; i<weights.length; i++) {
-			for(int j=i+1; j<weights.length; j++) 
-					System.out.print(weights[i][j] + " ");
-			System.out.println();
-		}
+		/*Simulator sim = new Simulator(var);*/
 	}
 }

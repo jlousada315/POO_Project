@@ -82,11 +82,11 @@ public class Graph implements IGraph {
 
 	//Calculates the next Node 
 	public int nextNode(LinkedList<Integer> path) {
-		int Current = path.getLast()-1; // Current Node
+		int Current = path.getLast(); // Current Node
 		LinkedList<Integer> Adj = new LinkedList<Integer>();  //list of Adjacent Nodes of Current	
-		for(int i=0; i<weights.length; i++) {
-			if(weights[Current][i]!=0)
-				Adj.add(i);
+		for(int i=0; i<weights.length-1; i++) {
+			if(weights[Current][i]!=0 && i+1!=Current)
+				Adj.add(i+1);
 		}
 		int nbedges = Adj.size(); //number of edges adjacent to current AcoNode
 		Object index[] = new Object[nbedges];
@@ -137,7 +137,7 @@ public class Graph implements IGraph {
 		double updateValue = v.getPlevel()*totalW/pathW;
 		System.out.println("New Value" + updateValue);
 		for(int i=0; i<path.size()-1; i++) { 
-			pheromones[path.get(i)-1][path.get(i+1)-1] += updateValue;	
+			pheromones[path.get(i)][path.get(i+1)] += updateValue;	
 		}	
 	}
 	
@@ -159,5 +159,24 @@ public class Graph implements IGraph {
 		}
 		pheromones[a[0]][a[1]] = 0;		
 		return false;
+	}
+	
+	//to string method
+	@Override
+	public String toString() {
+		StringBuilder str = new StringBuilder();
+		str.append("Weights:\n");
+		for(int i=0; i<weights.length; i++) {
+			for(int j=0; j<weights.length; j++) 
+				str.append(weights[i][j] + " ");
+			str.append("\n");
+		}
+		str.append("Pheromones:\n");
+		for(int i=0; i<pheromones.length; i++) {
+			for(int j=0; j<pheromones.length; j++) 
+				str.append(pheromones[i][j] + " ");
+			str.append("\n");
+		}
+		return str.toString();		
 	}
 }
