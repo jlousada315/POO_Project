@@ -36,19 +36,22 @@ public class Simulator implements ISimulator {
 		Event currentEvent = pec.nextEvPEC();
 		double currentTime = currentEvent.getTimestamp();
 		//run while current time lower than finalinst
-		while(currentTime < v.getFinalinst()) {
+		while(currentTime < v.getFinalinst() || pec.nextEvPEC()!=null) {
 			if(currentTime >= (counter[2]*(v.getFinalinst()/20))) {
 				print(currentTime);
 			}
 			currentEvent.simulate(pec, G, v);
 			currentEvent = pec.nextEvPEC();
-			currentTime = currentEvent.getTimestamp();
+			if(currentEvent != null)
+				currentTime = currentEvent.getTimestamp();
+			else
+				break;
 			if(currentEvent instanceof Move) {
 				counter[1]++;
 			}
 			counter[0]++;
 		}
-		System.out.println("Time limit reached: t = " + currentTime);
+		System.out.println("Time limit reached: t = " + v.getFinalinst());
 		System.out.println("Best Hamiltonian: " + G.getBestHamiltonian());
 	}
 
