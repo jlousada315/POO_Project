@@ -16,19 +16,21 @@ public class Move extends Event{
 	/*Methods*/
 
 	@Override
-	public void simulate(PEC pec, Graph G,Var v) {
+	public void simulate(PEC pec, Graph G, Var v) {
 		Ant aux = (Ant)obj;
 		// create next event
 		int current_node = aux.getLast();
 		int next_nodeidx = G.nextNode(aux);
 		aux.updatePath(next_nodeidx,G,v,pec,getTimestamp());
 		int real_next = (aux).getLast();
-		pec.addEvPEC(newMove(v.getDelta(), G.getEdgeWeigth(current_node,real_next)));
+		double time = Prob.expRand(v.getDelta()*G.getEdgeWeigth(current_node,real_next));
+		if(getTimestamp()+time <= v.getFinalinst())
+			pec.addEvPEC(newMove(time));
 	}
 
 	//creates next eventT
-	Move newMove(double delta,double a_ij) {
-		return new Move((Ant)obj , getTimestamp()+Prob.expRand(delta*a_ij));
+	Move newMove(double time) {
+		return new Move((Ant)obj , getTimestamp()+time);
 	}
 
 	/*
