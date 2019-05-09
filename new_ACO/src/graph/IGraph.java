@@ -8,26 +8,23 @@ import pec.PEC;
 public interface IGraph {
 	
 	//returns nest node
-	Node getNest();
-	int getSize();
-	Node getNode(int nodeidx);
+	public int getSize();
 	
-	//return total weigth of path
-	//double pathWeigth(int[] path);
-	
-	//calculates prob of nextnodes
-	Double[] calculateProb(Ant A);
-	
+	public double getEdgeWeigth(int n1 , int n2);
+
 	//returns index of next node.
-	int nextNode(Ant A);
+	public int nextNode(Ant A);
 	
 	//updates Pheromone level.
-	void updatePheromones(LinkedList<Integer> path);
+	public void updatePheromones(LinkedList<Integer> path);
 	
-	void initEvap(LinkedList<Integer> path, PEC pec, double timestamp);
+	public void initEvap(LinkedList<Integer> path, PEC pec, double timestamp);
+	
+	public boolean evapFromEdge(int[] e_ij);
 	
 	public double getPathWeight(LinkedList<Integer> path);
 	
 	public void updateHamiltonian(LinkedList<Integer> path);
-
+	
+	public LinkedList<Integer> getBestHamiltonian();
 }

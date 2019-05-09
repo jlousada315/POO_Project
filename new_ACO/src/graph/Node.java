@@ -7,7 +7,7 @@ import java.util.NoSuchElementException;
 public class Node {
 	//attributes
 	protected final int nodeidx;
-	final ArrayList<Edge> edges;
+	protected ArrayList<Edge> edges;
 	
 	//constructor
 	Node(int nodeidx){
@@ -20,20 +20,15 @@ public class Node {
 		edges.add(new Edge(this, node2, weight));
 	}
 	
-	//get node index
-	public int getIdx() {
-		return nodeidx;
-	}
-
 	//get edge from node2	
-	public Edge getEdge(Node node2) {
+	Edge getEdge(Node node2) {
 		for(int i=0; i<edges.size(); i++)
 			if(edges.get(i).node2.equals(node2))
 				return edges.get(i);
 		throw new NoSuchElementException("Edge does not exists.");
 	}
 
-	public int getEdgesSize() {
+	int getEdgesSize() {
 		return edges.size();
 	}
 	
@@ -61,7 +56,6 @@ public class Node {
 		return true;
 	}
 
-	
 	//generated toString
 	@Override
 	public String toString() {
@@ -71,6 +65,4 @@ public class Node {
 		}
 		return str;		
 	}
-
-
 }

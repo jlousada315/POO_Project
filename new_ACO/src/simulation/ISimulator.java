@@ -1,14 +1,12 @@
 package simulation;
 
-import java.util.LinkedList;
-
 public interface ISimulator {
 	//runs the simulation
-	void run();
+	public void run();
 	
 	//initialize events
-	void initEvents();
+	public void initEvents();
 
 	//print method
-	void print(double time);
+	public void print(double time);
 }
