@@ -13,19 +13,20 @@ import org.xml.sax.InputSource;
 import org.w3c.dom.*;
 
 /**
- * A XML file loader and validator.
+ * Used to load and validate XML file. Has an element of type 
+ * Var where all the variables of the XML file are stored.
  */
 public class XMLUtils {
 
 	private static Document document;
 	private static Element rootElement;
-	private Var v;
+	Var v;
 	
 	//Constructor
 	/** 
 	 * Constructor for XMLUtils.
 	 *
-	 * @param  xml is the directoy of the xml file
+	 * @param  xml is the directoy of the xml file.
 	 */
 	public XMLUtils(String xml) {
 		try {
@@ -38,7 +39,8 @@ public class XMLUtils {
 	}
 	
 	/**
-	 * Creates a Var that stores XML data.
+	 * Returns a Var.
+	 * @return v Var.
 	 */
 	public Var getV() {
 		return v;
@@ -50,8 +52,10 @@ public class XMLUtils {
 	 *
 	 * @param  xml is the directoy of the xml file
 	 * @return      boolean
+	 * @throws ParserConfigurationException if a parse configuration exception occurred.
+	 * @throws IOException if a IO exception occurred.
 	 */
-	private static boolean validateWithDTDUsingDOM(String xml) 
+	public static boolean validateWithDTDUsingDOM(String xml) 
 		  throws ParserConfigurationException, IOException
 		  {
 		    try {
@@ -66,12 +70,12 @@ public class XMLUtils {
 		            public void warning(SAXParseException e) throws SAXException {
 		              System.out.println("WARNING : " + e.getMessage()); // do nothing
 		            }
-		
+
 		            public void error(SAXParseException e) throws SAXException {
 		              System.out.println("ERROR : " + e.getMessage());
 		              throw e;
 		            }
-		
+
 		            public void fatalError(SAXParseException e) throws SAXException {
 		              System.out.println("FATAL : " + e.getMessage());
 		              throw e;
@@ -97,7 +101,6 @@ public class XMLUtils {
 	/**
 	 * Returns the double values stored in the XML file 
 	 * by this order (finalinst,plevel,alpha,beta,delta,eta,rho).
-	 *  Can only be used after validating.
 	 *
 	 * @return     Array of doubles in XML file
 	 */
@@ -129,7 +132,6 @@ public class XMLUtils {
 	/**
 	 * Returns the int values stored in the XML file 
 	 * by this order (antclosize,nbnodes,nestnode).
-	 *  Can only be used after validating.
 	 *
 	 * @return     Array of ints in XML file
 	 */
@@ -149,7 +151,6 @@ public class XMLUtils {
 	/**
 	 * Returns Weight values stored in the XML file, 
 	 * in a double matrix. 
-	 * Can only be used after validating.
 	 *
 	 * @return     Matrix of Weights in XML file.
 	 */

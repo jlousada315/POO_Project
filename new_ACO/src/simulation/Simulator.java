@@ -8,15 +8,23 @@ import eventHandler.*;
 import graph.Graph;
 import pec.*;
 
+
+/**
+ * Used to run the simulation for the given input Var.
+ *
+ */
 public class Simulator implements ISimulator {
 	//fields
 	Var v;
 	PEC pec;
 	Graph G;
 	Ant[] ants;
-	private int[] counter; // totalEvents, nbMoves, obsNum
+	int[] counter; // totalEvents, nbMoves, obsNum
 	
-	//constructor
+	/**
+	 * Constructor for class Simulator.
+	 * @param var Var where variables are stored.
+	 */
 	public Simulator(Var var) {
 		this.v = var;
 		pec = new PEC();
@@ -25,6 +33,7 @@ public class Simulator implements ISimulator {
 		for(int i=0; i<ants.length; i++)
 			ants[i] = new Ant(v.getNestnode());
 		counter = new int[3];
+		this.run();
 	}
 	
 	@Override
@@ -52,7 +61,6 @@ public class Simulator implements ISimulator {
 		}
 		System.out.println("Time limit reached: t = " + v.getFinalinst());
 		System.out.println("Best Hamiltonian: " + G.getBestHamiltonian());
-		System.out.println("Path Weight: " + G.getPathWeight(G.getBestHamiltonian()));
 	}
 
 	@Override

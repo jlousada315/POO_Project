@@ -1,5 +1,12 @@
 package graph;
 
+/**
+ * Used to represent a weighted edge in a graph. Stores both nodes 
+ * associated with it, the weight of the connection and
+ * the pheromone level. Also has methods to get information
+ * about the edge.
+ *
+ */
 public class Edge{
 	//attributes
 	protected final Node node1;
@@ -7,11 +14,32 @@ public class Edge{
 	protected final double weight;
 	protected double pheromone=0;
 	
-	//constructor
+	/**
+	 * Constructor for edge
+	 * @param node1 1st node.
+	 * @param node2 2nd node.
+	 * @param weight Weight.
+	 */
 	Edge(Node node1, Node node2, double weight){
 		this.node1 = node1;
 		this.node2 = node2;
 		this.weight = weight; 
+	}
+	
+	/**
+	 * Returns 2nd node.
+	 * @return node2 2nd node.
+	 */
+	public Node getNode2() {
+		return node2;
+	}
+	
+	/**
+	 * Returns weight.
+	 * @return weight Edge's weight.
+	 */
+	public double getWeight() {
+		return weight;
 	}
 	
 	//generated hashCode

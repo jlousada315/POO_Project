@@ -1,12 +1,23 @@
 package simulation;
 
+/**
+ * Interface for the simulation.
+ *
+ */
 public interface ISimulator {
-	//runs the simulation
-	public void run();
+	/**
+	 * Runs the simulation
+	 */
+	void run();
 	
-	//initialize events
-	public void initEvents();
+	/**
+	 * Initialize move events.
+	 */
+	void initEvents();
 
-	//print method
-	public void print(double time);
+	/**
+	 * print method
+	 * @param time current time.
+	 */
+	void print(double time);
 }
