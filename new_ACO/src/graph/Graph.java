@@ -15,16 +15,14 @@ import xml_utils.Var;
 
 public class Graph implements IGraph {
 	//attributes
-	Var v;
-	PEC pec;
-	double totalW;
-	final int nestnode;
-	final Node[] nodes;
+	private Var v;
+	private double totalW = 0;
+	private final Node[] nodes;
+	private LinkedList<Integer> bestHamiltonian = null;
 
 	//constructor
-	public Graph(Var v, PEC pec){
+	public Graph(Var v){
 		this.v = v;
-		this.nestnode = v.getNestnode();
 		int nbnodes = v.getNbnodes();
 		//create graph
 		nodes = new Node[nbnodes];
@@ -40,49 +38,22 @@ public class Graph implements IGraph {
 					totalW += weights[i][j];
 				}
 			}
-		this.pec = pec;
 	}
 
-	//get total weight
-	public double getTotalW() {
-		return totalW;
-	}
-
-	public Node getNode(int nodeidx) {
-		return nodes[nodeidx-1];
-	}
-	//get nest node
-	public Node getNest() {
-		//gets nest node
-		if(nodes[nestnode-1] != null ) {
-			Node Nest = nodes[nestnode-1];
-			return Nest;
-		} else {
-			System.out.println("Nest doesnt exist");
-			return null;
-		}
-	}
-	
 	public int getSize() {
 		return nodes.length;
-	}
-
-	//toString method
-	@Override
-	public String toString() {
-		String str = "Graph [" + nodes.length + " nodes]\n";
-		for(int i = 0; i< nodes.length;i++) {
-			str+= nodes[i].toString() + "\n";
-		}
-		return str;
 	}
 	
 	public double getEdgeWeigth(int n1 , int n2){
 		return nodes[n1-1].getEdge(nodes[n2-1]).weight;
 	}
 	
+	private double getEdgePheromones(int n1 , int n2){
+		return nodes[n1-1].getEdge(nodes[n2-1]).pheromone;
+	}
+	
 	//calculates prob of nextnodes
-	public Double[] calculateProb(Ant A) {		
+	private Double[] calculateProb(Ant A) {		
 		Node Current = nodes[A.getLast()-1]; // Current Node
 		LinkedList<Node> Adj = new LinkedList<Node>();  //List of Adjacent AcoNodes of Current AcoNode
 		double ci = 0;	//Normalization Constant
@@ -103,19 +74,18 @@ public class Graph implements IGraph {
 		}	
 
 		//Probabilities are stored in array.
-		Prob uniform = new Prob();
 		for(int k=0; k < w.length ; ++k) {
-			probability[k] = (uniform.uniformDist(100))*cij[k]/ci; 
+			probability[k] = (Prob.uniformDist(100))*cij[k]/ci; 
 		}
 
 		return probability;
 	}
 
-	//Calculates the following AcoNode
+	//Calculates the next Node 
 	public int nextNode(Ant A) {
 		Node Current = nodes[A.getLast()-1]; // Current Node
 		LinkedList<Node> Adj = new LinkedList<Node>();  //List of Adjacent AcoNodes of Current AcoNode		
-		int nbedges = Current.edges.size(); //number of edges adjacent to current AcoNode
+		int nbedges = Current.getEdgesSize(); //number of edges adjacent to current AcoNode
 		Integer adjindex[] = new Integer[nbedges];  
 		Object index[] = new Object[nbedges];
 
@@ -123,7 +93,7 @@ public class Graph implements IGraph {
 
 		//Fills List Adj with adjacent AcoNodes 
 		for(int i = 0 ; i < nbedges ; ++i) {
-			Adj.add(Current.edges.get(i).node2);
+			Adj.add(Current.edges.get(i).node2);			
 			adjindex[i] = Adj.get(i).nodeidx;
 		}
 		
@@ -141,63 +111,93 @@ public class Graph implements IGraph {
 		treeMap.putAll(unsortMap);
 		index = treeMap.keySet().toArray();
 
-		LinkedList<Node> J1 = new LinkedList<Node>();	//List of non-visited Adjacent AcoNodes J to current AcoNode i
-		Collection<Node> J = new ArrayList<Node>();		//Collection identical to J1
-		Prob uniform = new Prob();
-
+		LinkedList<Integer> J1 = new LinkedList<Integer>();	//List of non-visited Adjacent AcoNodes J to current AcoNode i
+		Collection<Integer> J = new ArrayList<Integer>();		//Collection identical to J1
+		
 		//Fills collection with ordered AcoNodes 
 		for(int i = 0; i < index.length; ++i) {
-			J.add(getNode((int)index[i]));
+			J.add((int)index[i]);
 		}
-		
-		for(int i = 0; i <A.getPath().size() ;++i) {
-			J.remove(nodes[A.getPath().get(i)-1]);
-		}
-		
-		J1.addAll(J);	//Makes a copy of Collection to LinkedList	
 
+		J.removeAll(A.getPath());	//eliminates AcoNodes that have already been visited
+		J1.addAll(J);	//Makes a copy of Collection to Linked
 
 		//Returns next AcoNode
 		if(J1.isEmpty()) {		
-			Node nextnode = Adj.get(uniform.uniformDist(Adj.size()));
+			Node nextnode = Adj.get(Prob.uniformDist(Adj.size()));
 			return nextnode.nodeidx;	//if J is empty, ant chooses uniformly between already visited adjacent AcoNodes  
 
 		}else {
-			Node nextnode = J1.getFirst();
-			return nextnode.nodeidx;	//ant chooses non visited AcoNode with the highest probability
+			return J1.getFirst();	//ant chooses non visited AcoNode with the highest probability
 		}		
 	}
 		
 	//if cycle is Hamiltonian, increase level of pheromones on the path
-	public void updatePheromones(Ant A) {
-		double pathW = 0;
-		for(int i=0; i<A.getPath().size()-1; i++) {
-			pathW += (nodes[A.getPath().get(i)-1].getEdge(nodes[A.getPath().get(i+1)-1])).weight;
-		}
+	public void updatePheromones(LinkedList<Integer> path) {
+		double pathW = getPathWeight(path);
 		double updateValue = v.getPlevel()*totalW/pathW;
-		for(int i=0; i<A.getPath().size()-1; i++) { 
-			(nodes[A.getPath().get(i)-1].getEdge(nodes[A.getPath().get(i+1)-1])).pheromone += updateValue;	
-		}	
+		//System.out.println("New Value: " + updateValue);
+		int i;
+		for(i=0; i<path.size()-1; i++) { 
+			((Edge)nodes[path.get(i)-1].getEdge(nodes[path.get(i+1)-1])).pheromone += updateValue;	
+		}
+		((Edge)nodes[path.get(i)-1].getEdge(nodes[path.get(0)-1])).pheromone += updateValue;	
 	}
-	
+		
 	//init Evap moves
-	public void initEvapMoves(Ant A) {
+	public void initEvap(LinkedList<Integer> path, PEC pec, double timestamp) {
 		int[] aux = new int[2];
-		LinkedList<Integer> path = A.getPath();
 		for(int i=0; i<path.size()-1; i++) {
 			aux[0] = path.get(i);
 			aux[1] = path.get(i+1);
+			//check if evaporation event is going on
+			if(getEdgePheromones(aux[0], aux[1]) == 0) {
+				pec.addEvPEC(new Evap(aux, timestamp+Prob.expRand(v.getEta())));
+			}
+		}
+		aux[0] = aux[1];
+		aux[1] = path.get(0);
+		if(getEdgePheromones(aux[0], aux[1]) == 0) {
 			pec.addEvPEC(new Evap(aux, Prob.expRand(v.getEta())));
 		}
 	}
-	
+		
 	//evap execution over edge
 	public boolean evapFromEdge(int[] e_ij){
-		if(nodes[e_ij[0]].getEdge(nodes[e_ij[1]]).pheromone>v.getRho()) {
-			nodes[e_ij[0]].getEdge(nodes[e_ij[1]]).pheromone -= v.getRho();
+		if(nodes[e_ij[0]-1].getEdge(nodes[e_ij[1]-1]).pheromone>v.getRho()) {
+			nodes[e_ij[0]-1].getEdge(nodes[e_ij[1]-1]).pheromone -= v.getRho();
 			return true;
 		}
-		nodes[e_ij[0]].getEdge(nodes[e_ij[1]]).pheromone = 0;		
+		nodes[e_ij[0]-1].getEdge(nodes[e_ij[1]-1]).pheromone = 0;		
 		return false;
+	}
+
+	public double getPathWeight(LinkedList<Integer> path) {
+		double pathW = 0;
+		for(int i=0; i<path.size()-1; i++) {
+			pathW += ((Edge)nodes[path.get(i)-1].getEdge(nodes[path.get(i+1)-1])).weight;
+		}		
+		return pathW;
+	}
+	
+	@SuppressWarnings("unchecked")
+	public void updateHamiltonian(LinkedList<Integer> path) {
+		if(bestHamiltonian==null || getPathWeight(path)<getPathWeight(bestHamiltonian)) {
+			bestHamiltonian = (LinkedList<Integer>)path.clone();
+		}
+	}
+	
+	public LinkedList<Integer> getBestHamiltonian() {
+		return bestHamiltonian;
+	}
+	
+	//toString method
+	@Override
+	public String toString() {
+		String str = "Graph [" + nodes.length + " nodes]\n";
+		for(int i = 0; i< nodes.length;i++) {
+			str+= nodes[i].toString() + "\n";
+		}
+		return str;
 	}
 }

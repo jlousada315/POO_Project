@@ -12,7 +12,7 @@ public class Prob {
 	}		
 	
 	// random uniform distribution
-	public int uniformDist(int max) {
+	public static int uniformDist(int max) {
 		Random rand = new Random();
 		int next = rand.nextInt(max);
 		return next;

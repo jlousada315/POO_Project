@@ -19,7 +19,7 @@ public class XMLUtils {
 
 	private static Document document;
 	private static Element rootElement;
-	Var v;
+	private Var v;
 	
 	//Constructor
 	/** 
@@ -51,7 +51,7 @@ public class XMLUtils {
 	 * @param  xml is the directoy of the xml file
 	 * @return      boolean
 	 */
-	public static boolean validateWithDTDUsingDOM(String xml) 
+	private static boolean validateWithDTDUsingDOM(String xml) 
 		  throws ParserConfigurationException, IOException
 		  {
 		    try {
@@ -66,12 +66,12 @@ public class XMLUtils {
 		            public void warning(SAXParseException e) throws SAXException {
 		              System.out.println("WARNING : " + e.getMessage()); // do nothing
 		            }
-
+		
 		            public void error(SAXParseException e) throws SAXException {
 		              System.out.println("ERROR : " + e.getMessage());
 		              throw e;
 		            }
-
+		
 		            public void fatalError(SAXParseException e) throws SAXException {
 		              System.out.println("FATAL : " + e.getMessage());
 		              throw e;
