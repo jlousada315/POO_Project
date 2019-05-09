@@ -5,7 +5,7 @@ import java.util.PriorityQueue;
 
 public class PEC {
 	//attributes
-	PriorityQueue<Event> pqEv;
+	private PriorityQueue<Event> pqEv;
 	
 	//Compares two Events by their timestamp
 	private static class EventComparator implements Comparator<Event> {

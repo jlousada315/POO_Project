@@ -14,7 +14,7 @@ public class Simulator implements ISimulator {
 	PEC pec;
 	Graph G;
 	Ant[] ants;
-	int[] counter; // totalEvents, nbMoves, obsNum
+	private int[] counter; // totalEvents, nbMoves, obsNum
 	
 	//constructor
 	public Simulator(Var var) {
@@ -25,7 +25,6 @@ public class Simulator implements ISimulator {
 		for(int i=0; i<ants.length; i++)
 			ants[i] = new Ant(v.getNestnode());
 		counter = new int[3];
-		this.run();
 	}
 	
 	@Override

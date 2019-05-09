@@ -14,16 +14,6 @@ public class Edge{
 		this.weight = weight; 
 	}
 	
-	//get node2
-	public Node getNode2() {
-		return node2;
-	}
-	
-	//get weight
-	public double getWeight() {
-		return weight;
-	}
-	
 	//generated hashCode
 	@Override
 	public int hashCode() {
