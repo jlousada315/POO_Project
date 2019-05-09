@@ -1,28 +1,33 @@
 package pec;
 
-import java.util.TreeMap;
+import java.util.Comparator;
+import java.util.PriorityQueue;
 
 public class PEC {
 	//attributes
-	TreeMap<Double,Event> treeMap;
-
+	private PriorityQueue<Event> pqEv;
+	
+	//Compares two Events by their timestamp
+	private static class EventComparator implements Comparator<Event> {
+		public int compare(Event l, Event r) {
+			return (int)(l.getTimestamp() - r.getTimestamp());
+		}
+	} 
+	
 	//constructor
 	public PEC() {
-		treeMap = new TreeMap<Double,Event>();
+		EventComparator EvComp = new EventComparator();
+		pqEv = new PriorityQueue<Event>(EvComp);
 	}
 
 	//adds the received event to the PEC
 	public void addEvPEC(Event ev) {
 		if(ev != null)
-			treeMap.put(ev.timestamp,ev);
-		/*ordenar por timestamp*/
+			pqEv.add(ev);
 	}
 
-	//removes the first event from the PEC and returns it
+	//removes and retrieves the first event from the PEC
 	public Event nextEvPEC() {
-		double key = (treeMap).firstKey();
-		Event f = treeMap.get(key);
-		treeMap.remove(key);
-		return f;
+		return pqEv.poll();
 	}
 }

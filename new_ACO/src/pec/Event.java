@@ -1,12 +1,12 @@
 package pec;
 
-import graph.Graph;
+import graph.IGraph;
 import xml_utils.Var;
 
 public abstract class Event {
 	//attributes
-	double timestamp=0;
-	public Object obj;
+	protected double timestamp=0;
+	protected Object obj;
 	
 	//constructor
 	public Event(Object obj, double timestamp){
@@ -15,13 +15,14 @@ public abstract class Event {
 	}
 	
 	//abstract simulate
-	abstract public void simulate(PEC pec, Graph G, Var v);
+	abstract public void simulate(PEC pec, IGraph G, Var v);
 	
 	//returns timestamp
 	public double getTimestamp() {
 		return timestamp;
 	}
 	
+	@Override
 	public String toString() {
 		return (obj.toString() + "time :" + timestamp);
 	}
